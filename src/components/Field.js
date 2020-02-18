@@ -6,6 +6,7 @@ import Select from "@atlaskit/select";
 import Tag from "@atlaskit/tag";
 import Group from "@atlaskit/tag-group";
 import Composite from "./Composite";
+import Section from "./Section";
 import Collection from "./Collection";
 
 function FieldEditorFactory(props, defaultValue) {
@@ -39,25 +40,33 @@ function FieldEditorFactory(props, defaultValue) {
 
 function FieldViewFactory(props, defaultValue) {
   const type = props.schema ? props.schema.type : null;
-  switch (type) {
-    case "label":
-      return props => <span className="value">{"" + defaultValue}</span>;
-    case "text":
-      return props => <span className="value">{"" + defaultValue}</span>;
-    case "select":
-      return props =>
-        !defaultValue || defaultValue.length === 0 ? (
-          <span>Empty</span>
-        ) : (
-          <Group>
-            {(defaultValue || []).map((v, k) => (
-              // TODO: We should map the label to the options, ie. normalise the values
-              <Tag text={v.label} key={k} />
-            ))}
-          </Group>
+  if (defaultValue === null || defaultValue === undefined) {
+    return props => <Tag text="Empty" />;
+  } else {
+    switch (type) {
+      case "label":
+        return props => (
+          <span className="Field-value__label">{"" + defaultValue}</span>
         );
-    default:
-      return props => "Unsupported type:" + type;
+      case "text":
+        return props => (
+          <span className="Field-value__text">{"" + defaultValue}</span>
+        );
+      case "select":
+        return props =>
+          !defaultValue || defaultValue.length === 0 ? (
+            <span>Empty</span>
+          ) : (
+            <Group>
+              {(defaultValue || []).map((v, k) => (
+                // TODO: We should map the label to the options, ie. normalise the values
+                <Tag text={v.label} key={k} />
+              ))}
+            </Group>
+          );
+      default:
+        return props => "Unsupported type:" + type;
+    }
   }
 }
 
@@ -74,21 +83,11 @@ export default function Field(props) {
   // complex.
   if (type === "section") {
     // TODO: Abstract away as component
-    return (
-      <section className="Section">
-        <h1>{props.schema.title || props.id}</h1>
-        <Composite view={Field} {...props} />
-      </section>
-    );
+    return <Section {...props} />;
   } else if (type === "composite") {
-    return <Composite view={Field} {...props} />;
+    return <Composite {...props} />;
   } else if (type === "collection") {
-    return (
-      <div className="Collection">
-        <em>{props.schema.title || props.id}</em>
-        <Collection view={Field} {...props} />
-      </div>
-    );
+    return <Collection {...props} />;
   } else {
     // We store the type as we're going to use it quite often.
     if (props.mode === "read") {

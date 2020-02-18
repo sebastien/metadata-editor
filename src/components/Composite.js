@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Field from "./Field";
 import assert from "../assert";
+import Add from "@atlaskit/icon/glyph/editor/add";
 
 export default function Composite(props) {
+  const [visible, setVisible] = useState(true);
   const value = props.defaultValue;
   return (
-    <div>
-      <ul>
+    <div className="Composite">
+      <ul className="Composite-list">
         {Object.entries(props.schema.children || []).map((kv, i) => {
           const [fieldKey, fieldSchema] = kv;
           const fieldValue = value ? value[fieldKey] : undefined;
           return (
-            <li key={i}>
+            <li className="Composite-list-item" key={i}>
               <Field
                 id={fieldKey}
                 schema={fieldSchema}

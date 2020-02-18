@@ -1,4 +1,64 @@
-.App {
-  font-family: sans-serif;
-  text-align: center;
+.Editor {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  --color-grey-lt: #f0f0f0;
+}
+
+.Composite-list,
+.Composite-list-item {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Collection-list,
+.Collection-list-item {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Collection-list-item {
+  margin-top: 10px;
+}
+
+.Collection-list-item-header {
+  display: flex;
+  align-items: center;
+  min-height: 3em;
+  border-bottom: 2px solid var(--color-grey-lt);
+}
+
+.Collection-list-item-header-key {
+  flex-grow: 100;
+  margin-bottom: 8px;
+}
+
+.Collection-list-item-header-key-label {
+  display: inline-block;
+  /* We need to offset the InlineEdit expanded size */
+  padding: 5px;
+  font-weight: bold;
+}
+
+.Collection-creator {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Section {
+  margin--top: 8px;
+  margin-bottom: 8px;
+}
+
+.Section-header {
+  display: flex;
+  align-items: center;
+}
+
+.Section-header-title {
+  margin: 0px;
+  flex-grow: 100;
 }

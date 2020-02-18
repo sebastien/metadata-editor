@@ -6,7 +6,10 @@
   "main": "src/index.js",
   "dependencies": {
     "@atlaskit/button": "13.3.5",
+    "@atlaskit/global-navigation": "8.0.5",
+    "@atlaskit/icon": "19.1.0",
     "@atlaskit/inline-edit": "10.0.25",
+    "@atlaskit/navigation-next": "7.3.4",
     "@atlaskit/select": "11.0.5",
     "@atlaskit/tag": "9.0.11",
     "@atlaskit/tag-group": "9.0.5",
