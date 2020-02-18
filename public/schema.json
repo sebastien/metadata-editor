@@ -1,0 +1,56 @@
+{
+  "description": {
+    "type": "section",
+    "title": "Description",
+    "children": {
+      "identification": { "type": "label" },
+      "title": { "type": "label" },
+      "description": { "type": "text" }
+    }
+  },
+  "structure": {
+    "type": "section",
+    "title": "Structure",
+    "children": {
+      "fields": {
+        "type": "collection",
+        "variant": "map",
+        "content": {
+          "type": "composite",
+          "children": {
+            "name": { "type": "label" },
+            "description": { "type": "text" }
+          }
+        }
+      }
+    }
+  },
+  "management": {
+    "type": "section",
+    "title": "Data management",
+    "children": {
+      "lifecycle": {
+        "type": "select",
+        "options": [{ "label": "managed" }, { "label": "unmanaged" }]
+      },
+      "workflow": {
+        "type": "select",
+        "options": [
+          { "label": "A" },
+          { "label": "B" },
+          { "label": "D" },
+          { "label": "E" }
+        ]
+      },
+      "dataflow": {
+        "type": "select",
+        "options": [
+          { "label": "A" },
+          { "label": "B" },
+          { "label": "D" },
+          { "label": "E" }
+        ]
+      }
+    }
+  }
+}

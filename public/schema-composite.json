@@ -1,0 +1,10 @@
+{
+  "composite": {
+    "type": "composite",
+    "variant": "map",
+    "children": {
+      "name": { "type": "label" },
+      "description": { "type": "label" }
+    }
+  }
+}
