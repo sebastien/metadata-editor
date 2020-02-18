@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@atlaskit/button";
 import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Field from "./Field";
 
 export default function Collection(props) {
-  const [value, setValue] = useState(props.defaultValue || {});
+  const value = props.defaultValue || {};
 
   // FIXME: Does not preserve integrity
   const addItem = _ => {
@@ -13,7 +13,6 @@ export default function Collection(props) {
     const n = Object.keys(value).length;
     // TODO: Should check that the key does not exist yet
     v[n] = {};
-    setValue(v);
     props.onChange(v, props.id);
   };
 
@@ -21,7 +20,6 @@ export default function Collection(props) {
     const v = { ...value };
     //TODO: Should check that the key is defined
     delete v[k];
-    setValue(v);
     props.onChange(v, props.id);
   };
 
@@ -29,14 +27,12 @@ export default function Collection(props) {
     const v = { ...value };
     v[kk] = k;
     delete v[k];
-    setValue(v);
     props.onChange(v, props.id);
   };
 
   const setItem = (k, o) => {
     const v = { ...value };
     v[k] = o;
-    setValue(v);
     props.onChange(v, props.id);
   };
 
@@ -45,7 +41,7 @@ export default function Collection(props) {
   return (
     <div>
       <ul>
-        {items.length == 0 ? (
+        {items.length === 0 ? (
           <li>Empty</li>
         ) : (
           items.map((kv, i) => {
@@ -59,8 +55,11 @@ export default function Collection(props) {
                   editView={fieldProps => (
                     <TextField {...fieldProps} autoFocus defaultValue={k} />
                   )}
-                  readView={_ => <div>{"key:" + k}</div>}
+                  readView={_ => <div>{k}</div>}
                   defaultValue={k}
+                  onSubmit={event => {
+                    console.log("SUBMIT");
+                  }}
                   onConfirm={value => {
                     renameItem(k, value);
                   }}
@@ -74,7 +73,6 @@ export default function Collection(props) {
                     defaultValue={v ? v[k] : undefined}
                     onChange={(w, id) => {
                       // This propagates the changes up the chain
-                      console.log("Collection change", k, "of", v, "to", w);
                       const o = { ...v };
                       o[id] = w;
                       setItem(k, o);

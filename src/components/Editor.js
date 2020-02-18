@@ -19,9 +19,10 @@ export default function Editor(props) {
     setValue({});
   };
 
+  const schema_url = props.schema || "schema.json";
   useEffect(() => {
     async function fetchData() {
-      fetch(props.schema || "schema.json")
+      fetch(schema_url)
         .then(_ => {
           return _.json();
         })
@@ -30,7 +31,7 @@ export default function Editor(props) {
         });
     }
     fetchData();
-  }, props.schema || "schema.json");
+  }, [schema_url]);
 
   return (
     <div className="Editor">

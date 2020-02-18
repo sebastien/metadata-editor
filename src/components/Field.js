@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import InlineEdit from "@atlaskit/inline-edit";
 import TextField from "@atlaskit/textfield";
 import TextArea from "@atlaskit/textarea";
@@ -46,7 +46,7 @@ function FieldViewFactory(props, defaultValue) {
       return props => <span className="value">{"" + defaultValue}</span>;
     case "select":
       return props =>
-        !defaultValue || defaultValue.length == 0 ? (
+        !defaultValue || defaultValue.length === 0 ? (
           <span>Empty</span>
         ) : (
           <Group>
@@ -81,12 +81,7 @@ export default function Field(props) {
       </section>
     );
   } else if (type === "composite") {
-    return (
-      <div className="Composite">
-        <em>{props.schema.title || props.id}</em>
-        <Composite view={Field} {...props} />
-      </div>
-    );
+    return <Composite view={Field} {...props} />;
   } else if (type === "collection") {
     return (
       <div className="Collection">
@@ -96,12 +91,10 @@ export default function Field(props) {
     );
   } else {
     // We store the type as we're going to use it quite often.
-    const type = props.schema ? props.schema.type : null;
-
     if (props.mode === "read") {
-      return FieldViewFactory(props, value);
+      return FieldViewFactory(props, defaultValue);
     } else if (props.mode === "edit") {
-      return FieldEditorFactory(props, value);
+      return FieldEditorFactory(props, defaultValue);
     } else {
       // This picks the edit and read views for the field based on its
       // type.

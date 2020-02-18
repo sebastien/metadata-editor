@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Field from "./Field";
 import assert from "../assert";
 
 export default function Composite(props) {
   const value = props.defaultValue;
-  console.log("▣ Composite[init] = ", value, "from", props);
   return (
     <div>
       <ul>
@@ -22,16 +21,9 @@ export default function Composite(props) {
                   const updated_value = value ? { ...value } : {};
                   updated_value[fieldKey] = v;
                   assert(
-                    fieldKey == key,
+                    fieldKey === key,
                     `Field key "${fieldKey}" is different from value key "${key}"`
                   );
-                  console.log(
-                    `▢ Composite: ${props.path}#${key} ⇐`,
-                    v,
-                    "from",
-                    value
-                  );
-                  console.log("➮ ", props.id, "=", updated_value);
                   props.onChange(updated_value, props.id);
                 }}
               />
