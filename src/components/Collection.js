@@ -4,71 +4,51 @@ import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Field from "./Field";
 
-function copyItems(items) {
-  const res = {};
-  for (const k in items) {
-    res[k] = items[k];
-  }
-  return res;
-}
-
 export default function Collection(props) {
-  const value = props.defaultValue || {};
+  const value = props.defaultValue || [];
 
   // FIXME: Does not preserve integrity
   const addItem = _ => {
-    const v = copyItems(value);
-    const n = Object.keys(value).length;
-    // TODO: Should check that the key does not exist yet
-    v["XXXXXXXXX" + n * 10000] = {};
+    props.onChange(value.concat([{ key: undefined, value: undefined }]));
+  };
+
+  const removeItem = i => {
+    const v = value.filter((v, j) => i !== j);
     props.onChange(v, props.id);
   };
 
-  const removeItem = k => {
-    const v = copyItems(value);
-    //TODO: Should check that the key is defined
-    delete v[k];
+  const renameItem = (i, k) => {
+    const v = value.map((v, j) => (i === j ? { ...v, key: k } : v));
     props.onChange(v, props.id);
   };
 
-  const renameItem = (k, kk) => {
-    const v = copyItems(value);
-    v[kk] = v[k];
-    delete v[k];
+  const setItem = (i, o) => {
+    const v = value.map((v, j) => (i === j ? { ...v, value: o } : v));
     props.onChange(v, props.id);
   };
 
-  const setItem = (k, o) => {
-    const v = copyItems(value);
-    v[k] = o;
-    props.onChange(v, props.id);
-  };
-
-  const items = Object.entries(value || {});
-
-  console.log("FIELD", items, "form", value);
   return (
     <div>
       <ul>
-        {items.length === 0 ? (
+        {value.length === 0 ? (
           <li>Empty</li>
         ) : (
-          items.map((kv, i) => {
-            const [k, v] = kv;
-            console.log("Item #", i, "@", k, "=", v, "in", kv);
+          value.map((item, i) => {
+            const k = item.key;
+            const v = item.value;
             return (
               <li key={i}>
                 <div>
-                  <Button onClick={() => removeItem(k)}>Remove</Button>
+                  <Button onClick={() => removeItem(i)}>Remove</Button>
                 </div>
                 <InlineEdit
                   editView={fieldProps => (
                     <TextField {...fieldProps} autoFocus defaultValue={k} />
                   )}
-                  readView={_ => <div>{k}</div>}
+                  readView={_ => (k ? <div>{k}</div> : <em>New item</em>)}
                   defaultValue={k}
                   onConfirm={value => {
-                    renameItem(k, value);
+                    renameItem(i, value);
                   }}
                 />
 
@@ -79,10 +59,9 @@ export default function Collection(props) {
                     path={props.path ? props.path + "." + k : k}
                     defaultValue={v ? v[k] : undefined}
                     onChange={(w, id) => {
-                      // This propagates the changes up the chain
                       const o = { ...v };
                       o[id] = w;
-                      setItem(k, o);
+                      setItem(i, o);
                     }}
                   />
                 </div>
