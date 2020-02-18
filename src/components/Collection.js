@@ -4,40 +4,49 @@ import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Field from "./Field";
 
+function copyItems(items) {
+  const res = {};
+  for (const k in items) {
+    res[k] = items[k];
+  }
+  return res;
+}
+
 export default function Collection(props) {
   const value = props.defaultValue || {};
 
   // FIXME: Does not preserve integrity
   const addItem = _ => {
-    const v = { ...value };
+    const v = copyItems(value);
     const n = Object.keys(value).length;
     // TODO: Should check that the key does not exist yet
-    v[n] = {};
+    v["XXXXXXXXX" + n * 10000] = {};
     props.onChange(v, props.id);
   };
 
   const removeItem = k => {
-    const v = { ...value };
+    const v = copyItems(value);
     //TODO: Should check that the key is defined
     delete v[k];
     props.onChange(v, props.id);
   };
 
   const renameItem = (k, kk) => {
-    const v = { ...value };
-    v[kk] = k;
+    const v = copyItems(value);
+    v[kk] = v[k];
     delete v[k];
     props.onChange(v, props.id);
   };
 
   const setItem = (k, o) => {
-    const v = { ...value };
+    const v = copyItems(value);
     v[k] = o;
     props.onChange(v, props.id);
   };
 
   const items = Object.entries(value || {});
 
+  console.log("FIELD", items, "form", value);
   return (
     <div>
       <ul>
@@ -46,8 +55,9 @@ export default function Collection(props) {
         ) : (
           items.map((kv, i) => {
             const [k, v] = kv;
+            console.log("Item #", i, "@", k, "=", v, "in", kv);
             return (
-              <li key={k}>
+              <li key={i}>
                 <div>
                   <Button onClick={() => removeItem(k)}>Remove</Button>
                 </div>
@@ -57,9 +67,6 @@ export default function Collection(props) {
                   )}
                   readView={_ => <div>{k}</div>}
                   defaultValue={k}
-                  onSubmit={event => {
-                    console.log("SUBMIT");
-                  }}
                   onConfirm={value => {
                     renameItem(k, value);
                   }}
