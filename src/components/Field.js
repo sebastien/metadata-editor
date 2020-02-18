@@ -27,8 +27,8 @@ function FieldEditorFactory(props, defaultValue) {
         <Select
           {...fieldProps}
           options={props.schema ? props.schema.options : null}
-          defaultValue={defaultValue || []}
-          isMulti
+          defaultValue={defaultValue}
+          isMulti={props.schema.multiple}
           openMenuOnFocus
           autoFocus
         />
@@ -45,27 +45,28 @@ function FieldViewFactory(props, defaultValue) {
   } else {
     switch (type) {
       case "label":
-        return props => (
+        return fieldProps => (
           <span className="Field-value__label">{"" + defaultValue}</span>
         );
       case "text":
-        return props => (
+        return fieldProps => (
           <span className="Field-value__text">{"" + defaultValue}</span>
         );
       case "select":
-        return props =>
+        return fieldProps =>
           !defaultValue || defaultValue.length === 0 ? (
-            <span>Empty</span>
-          ) : (
+            <Tag text="Empty" />
+          ) : props.schema.multiple ? (
             <Group>
               {(defaultValue || []).map((v, k) => (
-                // TODO: We should map the label to the options, ie. normalise the values
                 <Tag text={v.label} key={k} />
               ))}
             </Group>
+          ) : (
+            <Tag text={defaultValue.label} />
           );
       default:
-        return props => "Unsupported type:" + type;
+        return fieldProps => "Unsupported type:" + type;
     }
   }
 }
@@ -102,7 +103,11 @@ export default function Field(props) {
 
       return (
         <InlineEdit
-          label={props.hasLabel !== false ? props.id : undefined}
+          label={
+            props.hasLabel !== false
+              ? props.schema.label || props.id
+              : undefined
+          }
           editView={editView}
           readView={readView}
           defaultValue={defaultValue}

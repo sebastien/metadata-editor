@@ -1,0 +1,20 @@
+{
+  "single": {
+    "type": "select",
+    "label": "Select field with multiple=false",
+    "multiple": false,
+    "options": [
+      { "label": "Managed", "value": "managed" },
+      { "label": "Unmanaged", "value": "unmanaged" }
+    ]
+  },
+  "multiple": {
+    "type": "select",
+    "label": "Select field with multiple=true",
+    "multiple": true,
+    "options": [
+      { "label": "Managed", "value": "managed" },
+      { "label": "Unmanaged", "value": "unmanaged" }
+    ]
+  }
+}
