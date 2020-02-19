@@ -1,7 +1,7 @@
 {
   "description": {
     "type": "section",
-    "title": "Description",
+    "label": "Description",
     "children": {
       "identification": { "type": "label" },
       "title": { "type": "label" },
@@ -10,7 +10,7 @@
   },
   "structure": {
     "type": "section",
-    "title": "Structure",
+    "label": "Structure",
     "children": {
       "fields": {
         "type": "collection",
@@ -27,7 +27,7 @@
   },
   "management": {
     "type": "section",
-    "title": "Data management",
+    "label": "Data management",
     "children": {
       "lifecycle": {
         "type": "select",

@@ -12,7 +12,9 @@ export default function Section(props) {
   return (
     <section className="Section">
       <header className="Section-header">
-        <h1 className="Section-header-title">{props.title || props.id}</h1>
+        <h1 className="Section-header-title">
+          {props.schema.label || props.id}
+        </h1>
         <Button
           onClick={() => toggleVisibility()}
           appearance="subtle"

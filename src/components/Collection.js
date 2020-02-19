@@ -57,7 +57,9 @@ export default function Collection(props) {
     <div className="Collection">
       <ul className="Collection-list">
         {value.length === 0 ? (
-          <li>Empty</li>
+          <li>
+            <Tag text="Empty" />
+          </li>
         ) : (
           value.map((item, i) => {
             const k = item.key;
@@ -75,11 +77,11 @@ export default function Collection(props) {
                       )}
                       readView={_ =>
                         k ? (
-                          <span class="Collection-list-item-header-key-label">
+                          <span className="Collection-list-item-header-key-label">
                             {k}
                           </span>
                         ) : (
-                          <em class="Collection-list-item-header-key-placeholder">
+                          <em className="Collection-list-item-header-key-placeholder">
                             New item
                           </em>
                         )

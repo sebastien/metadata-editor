@@ -1,8 +1,49 @@
-.Editor {
+:root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
   --color-grey-lt: #f0f0f0;
+  --color-grey-ltr: #fafafa;
+}
+
+.Page-header-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.EditorPage {
+  background-color: var(--color-grey-ltr);
+}
+
+.Editor {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.Editor-content {
+  max-width: 60em;
+  min-width: 20em;
+  flex-basis: 60em;
+}
+
+.Editor-content-fields {
+  border-right: 2px solid #f0f0f0;
+  background: #ffffff;
+}
+
+.Editor-content-actions {
+  border-top: 2px solid #f0f0f0;
+  background-color: #fafafa;
+  padding: 16px;
+}
+
+.Editor-sidebar {
+  background: #fafafa;
+  padding: 16px;
+  flex-grow: grow;
+  min-width: 10em;
 }
 
 .Composite-list,
@@ -49,16 +90,27 @@
 }
 
 .Section {
-  margin--top: 8px;
-  margin-bottom: 8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.Section:first-child {
+  border-top: 0px solid #f0f0f0;
 }
 
 .Section-header {
   display: flex;
+  padding-left: 16px;
+  padding-right: 8px;
   align-items: center;
 }
 
 .Section-header-title {
   margin: 0px;
   flex-grow: 100;
+}
+.Section-body {
+  padding: 16px;
+  padding-top: 0px;
 }

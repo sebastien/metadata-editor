@@ -35,26 +35,33 @@ export default function Editor(props) {
 
   return (
     <div className="Editor">
-      {Object.entries(schema).map((kv, i) => {
-        const [k, v] = kv;
-        return (
-          <Field
-            key={i}
-            id={k}
-            path={k}
-            schema={v}
-            defaultValue={value[k]}
-            onChange={v => {
-              const res = { ...value };
-              res[k] = v;
-              setValue(res);
-              console.log("Editor.value=", res);
-              storage.setItem(storageKey, JSON.stringify(res));
-            }}
-          />
-        );
-      })}
-      <Button onClick={clear}>Clear</Button>
+      <section className="Editor-content">
+        <div className="Editor-content-fields">
+          {Object.entries(schema).map((kv, i) => {
+            const [k, v] = kv;
+            return (
+              <Field
+                key={i}
+                id={k}
+                path={k}
+                schema={v}
+                defaultValue={value[k]}
+                onChange={v => {
+                  const res = { ...value };
+                  res[k] = v;
+                  setValue(res);
+                  console.log("Editor.value=", res);
+                  storage.setItem(storageKey, JSON.stringify(res));
+                }}
+              />
+            );
+          })}
+        </div>
+        <div className="Editor-content-actions">
+          <Button onClick={clear}>Clear</Button>
+        </div>
+      </section>
+      <aside className="Editor-sidebar">asdas</aside>
     </div>
   );
 }
