@@ -7,17 +7,21 @@ export default function Editor(props) {
   const storageKey = props.storageKey || "Editor";
 
   const [schema, setSchema] = useState({});
-  const [value, setValue] = useState(
-    props.defaultValue || JSON.parse(storage.getItem(storageKey) || "{}")
-  );
+  const [value, setValue] = useState(props.defaultValue || {});
 
-  console.log("Editor initial value", value);
-
+  console.log("Editor initial value", value, "default", props.defaultValue);
   // FIXME: This does not quite work
   const clear = () => {
     storage.setItem(storageKey, "{}");
     setValue({});
   };
+  useEffect(
+    _ => {
+      console.log("Editor. Setting value to", _);
+      setValue(_);
+    },
+    [props.defaultValue]
+  );
 
   const schema_url = props.schema || "schema.json";
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function Editor(props) {
                 id={k}
                 path={k}
                 schema={v}
-                defaultValue={value[k]}
+                defaultValue={value ? value[k] : undefined}
                 onChange={v => {
                   const res = { ...value };
                   res[k] = v;
@@ -61,7 +65,7 @@ export default function Editor(props) {
           <Button onClick={clear}>Clear</Button>
         </div>
       </section>
-      <aside className="Editor-sidebar">asdas</aside>
+      <aside className="Editor-sidebar" />
     </div>
   );
 }

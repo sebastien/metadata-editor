@@ -14,7 +14,6 @@
     "children": {
       "fields": {
         "type": "collection",
-        "variant": "map",
         "content": {
           "type": "composite",
           "children": {

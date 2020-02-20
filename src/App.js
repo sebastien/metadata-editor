@@ -74,13 +74,6 @@ const productHomeView = {
           id: "catalogue",
           text: "Catalogue",
           to: "/catalogue"
-        },
-        {
-          type: "InlineComponent",
-          component: LinkItem,
-          id: "editor",
-          text: "Editor",
-          to: "/editor"
         }
       ]
     }
@@ -103,7 +96,7 @@ const EditorRouteBase = props => {
     navigationViewController.setView(productHomeView.id);
   }, [true]);
 
-  return <EditorPage />;
+  return <EditorPage dataset={props.match.params.datasetId} />;
 };
 const EditorRoute = withNavigationViewController(EditorRouteBase);
 
@@ -120,7 +113,7 @@ const App = props => {
     <LayoutManagerWithViewController globalNavigation={AppGlobalNavigation}>
       <Switch>
         <Route path="/catalogue" component={CatalogueRoute} />
-        <Route path="/editor" component={EditorRoute} />
+        <Route path="/editor/:datasetId" component={EditorRoute} />
       </Switch>
     </LayoutManagerWithViewController>
   );
