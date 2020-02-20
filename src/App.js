@@ -86,7 +86,7 @@ const CatalogueRouteBase = props => {
     navigationViewController.setView(productHomeView.id);
   }, [true]);
 
-  return <CataloguePage />;
+  return <CataloguePage prefix={props.match.params.prefix} />;
 };
 const CatalogueRoute = withNavigationViewController(CatalogueRouteBase);
 
@@ -112,7 +112,10 @@ const App = props => {
   return (
     <LayoutManagerWithViewController globalNavigation={AppGlobalNavigation}>
       <Switch>
-        <Route path="/catalogue" component={CatalogueRoute} />
+        <Route
+          path={["/catalogue/:prefix", "/catalogue"]}
+          component={CatalogueRoute}
+        />
         <Route path="/editor/:datasetId" component={EditorRoute} />
       </Switch>
     </LayoutManagerWithViewController>

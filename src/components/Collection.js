@@ -11,9 +11,11 @@ import Remove from "@atlaskit/icon/glyph/editor/remove";
 import Add from "@atlaskit/icon/glyph/editor/add";
 import Up from "@atlaskit/icon/glyph/arrow-up";
 import Down from "@atlaskit/icon/glyph/arrow-down";
+import { applyPropertyStyle } from "@atlaskit/button/dist/cjs/theme";
 
 export default function Collection(props) {
   const value = props.defaultValue || [];
+  const schema = props.schema || {};
 
   // FIXME: Does not preserve integrity
   const addItem = _ => {
@@ -68,7 +70,7 @@ export default function Collection(props) {
               <li className="Collection-list-item" key={i}>
                 <div className="Collection-list-item-header">
                   <div className="Collection-list-item-header-tag">
-                    <Tag text="item" color="grey" />
+                    <Tag text={props.schema.itemLabel || "Item"} color="grey" />
                   </div>
                   <div className="Collection-list-item-header-key">
                     <InlineEdit
@@ -121,14 +123,12 @@ export default function Collection(props) {
 
                 <div className="Collection-list-item-body">
                   <Field
-                    id={k}
-                    schema={props.schema.content}
-                    path={props.path ? props.path + "." + k : k}
-                    defaultValue={v ? v[k] : undefined}
+                    id={i}
+                    path={props.path ? props.path + "." + i : i}
+                    schema={schema.content}
+                    defaultValue={v}
                     onChange={(w, id) => {
-                      const o = { ...v };
-                      o[id] = w;
-                      setItem(i, o);
+                      setItem(i, Object.assign({ ...v }, w));
                     }}
                   />
                 </div>

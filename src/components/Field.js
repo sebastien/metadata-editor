@@ -10,7 +10,8 @@ import Section from "./Section";
 import Collection from "./Collection";
 
 function FieldEditorFactory(props, defaultValue) {
-  const type = props.schema ? props.schema.type : null;
+  const schema = props.schema || {};
+  const type = schema.type;
   switch (type) {
     case "label":
       return fieldProps => {
@@ -26,9 +27,9 @@ function FieldEditorFactory(props, defaultValue) {
       return fieldProps => (
         <Select
           {...fieldProps}
-          options={props.schema ? props.schema.options : null}
+          options={schema.options}
           defaultValue={defaultValue}
-          isMulti={props.schema.multiple}
+          isMulti={schema.multiple}
           openMenuOnFocus
           autoFocus
         />
@@ -39,7 +40,8 @@ function FieldEditorFactory(props, defaultValue) {
 }
 
 function FieldViewFactory(props, defaultValue) {
-  const type = props.schema ? props.schema.type : null;
+  const schema = props.schema || {};
+  const type = schema.type;
   if (defaultValue === null || defaultValue === undefined) {
     return props => <Tag text="Empty" />;
   } else {
@@ -56,7 +58,7 @@ function FieldViewFactory(props, defaultValue) {
         return fieldProps =>
           !defaultValue || defaultValue.length === 0 ? (
             <Tag text="Empty" />
-          ) : props.schema.multiple ? (
+          ) : schema.multiple ? (
             <Group>
               {(defaultValue || []).map((v, k) => (
                 <Tag text={v.label} key={k} />
@@ -76,7 +78,8 @@ function FieldViewFactory(props, defaultValue) {
 export default function Field(props) {
   // The value of the field
   const defaultValue = props.defaultValue;
-  const type = props.schema.type;
+  const schema = props.schema || {};
+  const type = schema.type;
 
   // If it's a section, things are much simpler, we just display a label,
   // and then iterate.
@@ -104,9 +107,7 @@ export default function Field(props) {
       return (
         <InlineEdit
           label={
-            props.hasLabel !== false
-              ? props.schema.label || props.id
-              : undefined
+            props.hasLabel !== false ? schema.label || props.id : undefined
           }
           editView={editView}
           readView={readView}

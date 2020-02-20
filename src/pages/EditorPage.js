@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import PageHeader from "@atlaskit/page-header";
 import Editor from "../components/Editor";
 import { api } from "../api";
-
-const breadcrumbs = (
-  <BreadcrumbsStateless onExpand={() => {}}>
-    <BreadcrumbsItem text="datasets" key="tdi.views.legalEntities" />
-    <BreadcrumbsItem text="tdi.views.legalEntities" key="tdi" />
-  </BreadcrumbsStateless>
-);
 
 export default props => {
   const datasetFQN = props.dataset || null;
@@ -20,6 +14,17 @@ export default props => {
     _.slice(0, -1).join("."),
     _[_.length - 1]
   ])((datasetFQN || "").split("."));
+
+  const breadcrumbs = (
+    <BreadcrumbsStateless>
+      <BreadcrumbsItem text="datasets" href="#/catalogue" key="datasets" />
+      <BreadcrumbsItem
+        text={datasetParent}
+        href={`#/catalogue/${datasetParent}`}
+        key="parent"
+      />
+    </BreadcrumbsStateless>
+  );
 
   useEffect(
     _ => {
@@ -37,10 +42,12 @@ export default props => {
 
   return (
     <div className="EditorPage">
-      <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
+      <PageHeader breadcrumbs={breadcrumbs}>
         Metadata for {datasetParent}.{datasetName}
       </PageHeader>
-      <Editor schema={props.schema} defaultValue={datasetValue} />
+      <div class="EditorPage-editor">
+        <Editor schema={props.schema} defaultValue={datasetValue} />
+      </div>
     </div>
   );
 };

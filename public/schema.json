@@ -1,5 +1,5 @@
 {
-  "description": {
+  "definition": {
     "type": "section",
     "label": "Description",
     "children": {
@@ -14,10 +14,10 @@
     "children": {
       "fields": {
         "type": "collection",
+        "itemLabel": "field",
         "content": {
           "type": "composite",
           "children": {
-            "name": { "type": "label" },
             "description": { "type": "text" }
           }
         }

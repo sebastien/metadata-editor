@@ -9,19 +9,14 @@ export default function Editor(props) {
   const [schema, setSchema] = useState({});
   const [value, setValue] = useState(props.defaultValue || {});
 
-  console.log("Editor initial value", value, "default", props.defaultValue);
   // FIXME: This does not quite work
   const clear = () => {
     storage.setItem(storageKey, "{}");
     setValue({});
   };
-  useEffect(
-    _ => {
-      console.log("Editor. Setting value to", _);
-      setValue(_);
-    },
-    [props.defaultValue]
-  );
+  useEffect(() => {
+    setValue(props.defaultValue);
+  }, [props.defaultValue]);
 
   const schema_url = props.schema || "schema.json";
   useEffect(() => {
@@ -61,7 +56,7 @@ export default function Editor(props) {
             );
           })}
         </div>
-        <div className="Editor-content-actions">
+        <div style={{ display: "none" }} className="Editor-content-actions">
           <Button onClick={clear}>Clear</Button>
         </div>
       </section>
