@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import PageHeader from "@atlaskit/page-header";
 import Editor from "../components/Editor";
 import { api } from "../api";
 
+const save = (id, value) => {
+  console.log("SAVING", id, value);
+  if (value) {
+    api.saveDataset(id, value);
+  }
+};
+
 export default props => {
   const datasetFQN = props.dataset || null;
+  const [isReadOnly, setReadOnly] = useState(true);
+  const [value, setValue] = useState(undefined);
+
   const [datasetValue, setDatasetValue] = useState(null);
 
   const [datasetParent, datasetName] = (_ => [
@@ -34,19 +43,51 @@ export default props => {
     },
     [datasetFQN]
   );
-  const actions = (
+  const actions = isReadOnly ? (
     <ButtonGroup>
-      <Button appearance="primary">Rename</Button>
+      <Button
+        appearance="primary"
+        onClick={_ => {
+          setReadOnly(false);
+        }}
+      >
+        Edit
+      </Button>
+    </ButtonGroup>
+  ) : (
+    <ButtonGroup>
+      <Button
+        appearance="primary"
+        onClick={_ => {
+          save(datasetFQN, value);
+          setReadOnly(true);
+        }}
+      >
+        Save
+      </Button>
+      <Button
+        appearance="subtle"
+        onClick={_ => {
+          setReadOnly(true);
+        }}
+      >
+        Cancel
+      </Button>
     </ButtonGroup>
   );
 
   return (
     <div className="EditorPage">
-      <PageHeader breadcrumbs={breadcrumbs}>
+      <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
         Metadata for {datasetParent}.{datasetName}
       </PageHeader>
-      <div class="EditorPage-editor">
-        <Editor schema={props.schema} defaultValue={datasetValue} />
+      <div className="EditorPage-editor">
+        <Editor
+          schema={props.schema}
+          defaultValue={datasetValue}
+          isReadOnly={isReadOnly}
+          onChange={_ => setValue(_)}
+        />
       </div>
     </div>
   );

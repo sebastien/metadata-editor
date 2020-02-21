@@ -5,6 +5,7 @@ import Field from "./Field";
 export default function Editor(props) {
   const storage = window.localStorage;
   const storageKey = props.storageKey || "Editor";
+  const isReadOnly = props.isReadOnly;
 
   const [schema, setSchema] = useState({});
   const [value, setValue] = useState(props.defaultValue || {});
@@ -44,13 +45,14 @@ export default function Editor(props) {
                 id={k}
                 path={k}
                 schema={v}
+                isReadOnly={isReadOnly}
                 defaultValue={value ? value[k] : undefined}
                 onChange={v => {
                   const res = { ...value };
                   res[k] = v;
                   setValue(res);
-                  console.log("Editor.value=", res);
                   storage.setItem(storageKey, JSON.stringify(res));
+                  props.onChange(res);
                 }}
               />
             );

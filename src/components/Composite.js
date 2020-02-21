@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Field from "./Field";
-import assert from "../assert";
-import Add from "@atlaskit/icon/glyph/editor/add";
 
 export default function Composite(props) {
-  const [visible, setVisible] = useState(true);
   const value = props.defaultValue;
+  const isReadOnly = props.isReadOnly;
+
   return (
     <div className="Composite">
       <ul className="Composite-list">
@@ -18,14 +17,11 @@ export default function Composite(props) {
                 id={fieldKey}
                 schema={fieldSchema}
                 path={props.path ? props.path + "." + fieldKey : fieldKey}
+                isReadOnly={isReadOnly}
                 defaultValue={fieldValue}
                 onChange={(v, key) => {
                   const updated_value = value ? { ...value } : {};
                   updated_value[fieldKey] = v;
-                  assert(
-                    fieldKey === key,
-                    `Field key "${fieldKey}" is different from value key "${key}"`
-                  );
                   props.onChange(updated_value, props.id);
                 }}
               />

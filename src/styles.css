@@ -11,6 +11,7 @@ body {
   --color-grey-lt: #f0f0f0;
   --color-grey-ltr: #fafafa;
   --color-text-body: #172b4d;
+  --color-grey-dk: #6b778c;
 }
 
 .Page-header-title {
@@ -61,6 +62,16 @@ body {
   padding: 16px;
   flex-grow: grow;
   min-width: 10em;
+}
+
+.Field[data-state~="readonly"] {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+.Field-label {
+  color: var(--color-grey-dk);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .Composite-list,

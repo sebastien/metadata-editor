@@ -80,6 +80,7 @@ export default function Field(props) {
   const defaultValue = props.defaultValue;
   const schema = props.schema || {};
   const type = schema.type;
+  const isReadOnly = props.isReadOnly;
 
   // If it's a section, things are much simpler, we just display a label,
   // and then iterate.
@@ -94,10 +95,15 @@ export default function Field(props) {
     return <Collection {...props} />;
   } else {
     // We store the type as we're going to use it quite often.
-    if (props.mode === "read") {
-      return FieldViewFactory(props, defaultValue);
+    if (props.mode === "read" || isReadOnly) {
+      return (
+        <div className="Field" data-state="readonly">
+          <div className="Field-label">{schema.label || props.id}</div>
+          {FieldViewFactory(props, defaultValue)(props)}
+        </div>
+      );
     } else if (props.mode === "edit") {
-      return FieldEditorFactory(props, defaultValue);
+      return FieldEditorFactory(props, defaultValue)(props);
     } else {
       // This picks the edit and read views for the field based on its
       // type.
