@@ -3,17 +3,20 @@ import Button from "@atlaskit/button";
 import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Tag from "@atlaskit/tag";
-import Field from "./Field";
+import Field, { resolveSchema } from "./Field";
 
 // SEE: https://atlaskit.atlassian.com/packages/core/icon/example/icon-explorer
 import Remove from "@atlaskit/icon/glyph/editor/remove";
 import Add from "@atlaskit/icon/glyph/editor/add";
 import Up from "@atlaskit/icon/glyph/arrow-up";
 import Down from "@atlaskit/icon/glyph/arrow-down";
+import { assert } from "../utils";
 
 export default function Collection(props) {
   const value = props.defaultValue || [];
-  const schema = props.schema || {};
+  const schema = props.schema;
+  const contentSchema = resolveSchema(schema.children, props.types);
+
   const isReadOnly = props.isReadOnly;
 
   // FIXME: Does not preserve integrity
@@ -56,6 +59,9 @@ export default function Collection(props) {
 
   return (
     <div className="Collection">
+      {props.label ? (
+        <div className="Collection-label">{props.label}</div>
+      ) : null}
       <ul className="Collection-list">
         {value.length === 0 ? (
           <li>
@@ -69,7 +75,7 @@ export default function Collection(props) {
               <li className="Collection-list-item" key={i}>
                 <div className="Collection-list-item-header">
                   <div className="Collection-list-item-header-tag">
-                    <Tag text={props.schema.itemLabel || "Item"} color="grey" />
+                    <Tag text={schema.itemLabel || "Item"} color="grey" />
                   </div>
                   <div className="Collection-list-item-header-key">
                     {isReadOnly ? (
@@ -135,7 +141,8 @@ export default function Collection(props) {
                   <Field
                     id={i}
                     path={props.path ? props.path + "." + i : i}
-                    schema={schema.content}
+                    schema={contentSchema}
+                    types={props.types}
                     isReadOnly={isReadOnly}
                     defaultValue={v}
                     onChange={(w, id) => {

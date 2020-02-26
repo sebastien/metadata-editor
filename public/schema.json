@@ -3,9 +3,16 @@
     "type": "section",
     "label": "Description",
     "children": {
-      "identification": { "type": "label" },
       "title": { "type": "label" },
-      "description": { "type": "text" }
+      "description": { "type": "text" },
+      "visibilty": {
+        "type": "select",
+        "options": [
+          { "label": "public", "value": "a" },
+          { "label": "private", "value": "b" },
+          { "label": "confidential", "value": "c" }
+        ]
+      }
     }
   },
   "structure": {

@@ -1,0 +1,17 @@
+{
+  "title": { "type": "label" },
+  "series": { "type": "collection", "children": "#series" },
+  "#series": {
+    "type": "composite",
+    "fields": {
+      "id": { "type": "label" },
+      "title": { "type": "label" },
+      "breakdown": {
+        "type": "collection",
+        "label": "Breakdown",
+        "itemLabel": "sub-series",
+        "children": "#series"
+      }
+    }
+  }
+}

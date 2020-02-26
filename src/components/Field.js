@@ -8,6 +8,30 @@ import Group from "@atlaskit/tag-group";
 import Composite from "./Composite";
 import Section from "./Section";
 import Collection from "./Collection";
+import { assert } from "../utils";
+
+/**
+ * Ensures that the given schema (either an object or string) is
+ * returned as an object. If it is a string, it will be resolved
+ * from the given types collection.
+ * @param {E} schema
+ * @param {*} types
+ */
+export function resolveSchema(schema, types) {
+  if (typeof schema === "string") {
+    assert(types, "No types given but schema is a string", schema);
+    assert(
+      types[schema],
+      "Mising type defininition",
+      schema,
+      "in types",
+      types
+    );
+    return types[schema];
+  } else {
+    return schema;
+  }
+}
 
 function FieldEditorFactory(props, defaultValue) {
   const schema = props.schema || {};

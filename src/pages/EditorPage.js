@@ -6,7 +6,6 @@ import Editor from "../components/Editor";
 import { api } from "../api";
 
 const save = (id, value) => {
-  console.log("SAVING", id, value);
   if (value) {
     api.saveDataset(id, value);
   }

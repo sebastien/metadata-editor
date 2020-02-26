@@ -8,6 +8,7 @@ export default function Editor(props) {
   const isReadOnly = props.isReadOnly;
 
   const [schema, setSchema] = useState({});
+  const [types, setTypes] = useState({});
   const [value, setValue] = useState(props.defaultValue || {});
 
   // FIXME: This does not quite work
@@ -19,7 +20,7 @@ export default function Editor(props) {
     setValue(props.defaultValue);
   }, [props.defaultValue]);
 
-  const schema_url = props.schema || "schema.json";
+  const schema_url = props.schema || "schema-recursive.json";
   useEffect(() => {
     async function fetchData() {
       fetch(schema_url)
@@ -27,7 +28,19 @@ export default function Editor(props) {
           return _.json();
         })
         .then(_ => {
-          setSchema(_);
+          // We extract the types from the schema, as they can be used
+          // later on.
+          const [schema, types] = Object.entries(_)
+            .reduce(
+              (ab, kv) => {
+                (kv[0].startsWith("#") ? ab[1] : ab[0]).push(kv);
+                return ab;
+              },
+              [[], []]
+            )
+            .map(_ => Object.fromEntries(_));
+          setTypes(types);
+          setSchema(schema);
         });
     }
     fetchData();
@@ -45,6 +58,7 @@ export default function Editor(props) {
                 id={k}
                 path={k}
                 schema={v}
+                types={types}
                 isReadOnly={isReadOnly}
                 defaultValue={value ? value[k] : undefined}
                 onChange={v => {
