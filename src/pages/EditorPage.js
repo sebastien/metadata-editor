@@ -3,11 +3,12 @@ import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import PageHeader from "@atlaskit/page-header";
 import Editor from "../components/Editor";
+import TablePreview from "../components/TablePreview";
 import { api } from "../api";
 
 const save = (id, value) => {
   if (value) {
-    api.saveDataset(id, value);
+    api.saveDatasetMetaData(id, value);
   }
 };
 
@@ -25,10 +26,10 @@ export default props => {
 
   const breadcrumbs = (
     <BreadcrumbsStateless>
-      <BreadcrumbsItem text="datasets" href="#/catalogue" key="datasets" />
+      <BreadcrumbsItem text="datasets" href="#/datasets" key="datasets" />
       <BreadcrumbsItem
         text={datasetParent}
-        href={`#/catalogue/${datasetParent}`}
+        href={`#/datasets/${datasetParent}`}
         key="parent"
       />
     </BreadcrumbsStateless>
@@ -37,7 +38,7 @@ export default props => {
   useEffect(
     _ => {
       datasetFQN
-        ? api.getDataset(datasetFQN).then(setDatasetValue)
+        ? api.getDatasetMetaData(datasetFQN).then(setDatasetValue)
         : setDatasetValue({});
     },
     [datasetFQN]

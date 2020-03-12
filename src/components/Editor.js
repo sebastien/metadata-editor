@@ -20,7 +20,7 @@ export default function Editor(props) {
     setValue(props.defaultValue);
   }, [props.defaultValue]);
 
-  const schema_url = props.schema || "schema-recursive.json";
+  const schema_url = props.schema || "schema.json";
   useEffect(() => {
     async function fetchData() {
       fetch(schema_url)

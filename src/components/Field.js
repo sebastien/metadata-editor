@@ -8,6 +8,7 @@ import Group from "@atlaskit/tag-group";
 import Composite from "./Composite";
 import Section from "./Section";
 import Collection from "./Collection";
+import TablePreview from "./TablePreview";
 import { assert } from "../utils";
 
 /**
@@ -117,6 +118,8 @@ export default function Field(props) {
     return <Composite {...props} />;
   } else if (type === "collection") {
     return <Collection {...props} />;
+  } else if (type === "table-preview") {
+    return <TablePreview {...props} />;
   } else {
     // We store the type as we're going to use it quite often.
     if (props.mode === "read" || isReadOnly) {

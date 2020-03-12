@@ -16,14 +16,23 @@ class API {
   }
 
   listDatasets(): Promise<Array<string>> {
-    return this.fetchJSON(`dataset/list`);
+    return this.fetchJSON(`dataset/?meta`);
   }
-  getDataset(dataset: string): Promise<Object> {
-    return this.fetchJSON(`dataset/${dataset}`);
+
+  listDatasetDimensions(dataset: string): Promise<Array<string>> {
+    return this.fetchJSON(`dataset/${dataset}/dimension/`);
   }
-  saveDataset(dataset: string, data: Object): Promise<Object> {
-    console.log("Saving dataset", dataset, ":", data);
-    return this.putJSON(`dataset/${dataset}`, data);
+
+  getDatasetMetaData(dataset: string): Promise<Object> {
+    return this.fetchJSON(`dataset/${dataset}:meta`);
+  }
+
+  getDatasetDataPreview(dataset: string): Promise<Object> {
+    return this.fetchJSON(`dataset/${dataset}/preview`);
+  }
+
+  saveDatasetMetaData(dataset: string, data: Object): Promise<Object> {
+    return this.putJSON(`dataset/${dataset}:meta`, data);
   }
 }
 

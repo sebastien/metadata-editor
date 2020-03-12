@@ -2,7 +2,7 @@
   "definition": {
     "type": "section",
     "label": "Description",
-    "children": {
+    "fields": {
       "title": { "type": "label" },
       "description": { "type": "text" },
       "visibilty": {
@@ -15,16 +15,25 @@
       }
     }
   },
+  "preview": {
+    "type": "section",
+    "label": "Preview",
+    "fields": {
+      "preview": {
+        "type": "table-preview"
+      }
+    }
+  },
   "structure": {
     "type": "section",
     "label": "Structure",
-    "children": {
+    "fields": {
       "fields": {
         "type": "collection",
         "itemLabel": "field",
         "content": {
           "type": "composite",
-          "children": {
+          "fields": {
             "description": { "type": "text" }
           }
         }
@@ -34,7 +43,7 @@
   "management": {
     "type": "section",
     "label": "Data management",
-    "children": {
+    "fields": {
       "lifecycle": {
         "type": "select",
         "options": [{ "label": "managed" }, { "label": "unmanaged" }]

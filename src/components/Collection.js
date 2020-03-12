@@ -10,7 +10,6 @@ import Remove from "@atlaskit/icon/glyph/editor/remove";
 import Add from "@atlaskit/icon/glyph/editor/add";
 import Up from "@atlaskit/icon/glyph/arrow-up";
 import Down from "@atlaskit/icon/glyph/arrow-down";
-import { assert } from "../utils";
 
 export default function Collection(props) {
   const value = props.defaultValue || [];

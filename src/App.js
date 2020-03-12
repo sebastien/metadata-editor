@@ -1,11 +1,10 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { HashRouter, Link, Route, Switch } from "react-router-dom";
 import GlobalNavigation from "@atlaskit/global-navigation";
 import AppIcon from "@atlaskit/icon/glyph/media-services/spreadsheet";
 import {
   LayoutManagerWithViewController,
   NavigationProvider,
-  ViewController,
   withNavigationViewController
 } from "@atlaskit/navigation-next";
 import EditorPage from "./pages/EditorPage";
@@ -71,9 +70,9 @@ const productHomeView = {
         {
           type: "InlineComponent",
           component: LinkItem,
-          id: "catalogue",
-          text: "Catalogue",
-          to: "/catalogue"
+          id: "datasets",
+          text: "Datasets",
+          to: "/datasets"
         }
       ]
     }
@@ -84,7 +83,7 @@ const CatalogueRouteBase = props => {
   const navigationViewController = props.navigationViewController;
   useEffect(() => {
     navigationViewController.setView(productHomeView.id);
-  }, [true]);
+  }, [navigationViewController]);
 
   return <CataloguePage prefix={props.match.params.prefix} />;
 };
@@ -94,7 +93,7 @@ const EditorRouteBase = props => {
   const navigationViewController = props.navigationViewController;
   useEffect(() => {
     navigationViewController.setView(productHomeView.id);
-  }, [true]);
+  }, [navigationViewController]);
 
   return <EditorPage dataset={props.match.params.datasetId} />;
 };
@@ -106,14 +105,14 @@ const App = props => {
     _ => {
       navigationViewController.addView(productHomeView);
     },
-    [true]
+    [navigationViewController]
   );
 
   return (
     <LayoutManagerWithViewController globalNavigation={AppGlobalNavigation}>
       <Switch>
         <Route
-          path={["/catalogue/:prefix", "/catalogue"]}
+          path={["/datasets/:prefix", "/datasets"]}
           component={CatalogueRoute}
         />
         <Route path="/editor/:datasetId" component={EditorRoute} />

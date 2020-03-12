@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import PageHeader from "@atlaskit/page-header";
 import { Link } from "react-router-dom";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import { ObjectResult, ResultItemGroup } from "@atlaskit/quick-search";
-import SmartQueryInput from "../components/SmartQueryInput";
 import { api } from "../api";
 
 const DatasetItem = props => {
@@ -21,8 +19,21 @@ export default props => {
   const [datasets, setDatasets] = useState([]);
   const prefixRe = props.prefix ? new RegExp("^" + props.prefix) : null;
   useEffect(() => {
-    api.listDatasets().then(setDatasets);
-  }, [true]);
+    // This normalizes the datasets from the data format into the format
+    // required by the view.
+    api.listDatasets().then(_ =>
+      setDatasets(
+        Object.entries(_ || {}).map(kv => {
+          const [k, v] = kv;
+          return {
+            key: k,
+            name: (v && v.definition && v.definition.identification) || k,
+            description: v && v.definition && v.definition.description
+          };
+        })
+      )
+    );
+  }, []);
 
   const breadcrumbs = props.prefix ? (
     <BreadcrumbsStateless>
@@ -39,9 +50,9 @@ export default props => {
     <div className="CataloguePage">
       <PageHeader breadcrumbs={breadcrumbs}>Data Catalogue</PageHeader>
       <ul className="DatasetList">
-        {datasets.map((v, i) =>
-          !props.prefix || prefixRe.test(v.name) ? (
-            <DatasetItem {...v} key={i} />
+        {(datasets || []).map((d, i) =>
+          !props.prefix || prefixRe.test(d.name) ? (
+            <DatasetItem {...d} key={d.key} />
           ) : (
             undefined
           )
