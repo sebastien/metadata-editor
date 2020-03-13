@@ -31,6 +31,15 @@ class API {
     return this.fetchJSON(`dataset/${dataset}/preview`);
   }
 
+  getDatasetDimensionDistribution(
+    dataset: string,
+    dimension: string
+  ): Promise<Object> {
+    return this.fetchJSON(
+      `dataset/${dataset}/dimension/${dimension}/distribution`
+    );
+  }
+
   saveDatasetMetaData(dataset: string, data: Object): Promise<Object> {
     return this.putJSON(`dataset/${dataset}:meta`, data);
   }

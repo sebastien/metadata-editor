@@ -199,3 +199,20 @@ body {
   background-color: var(--color-grey-lt);
   font-weight: bold;
 }
+
+.Occurences-item {
+  position: relative;
+}
+.Occurences-item-label {
+  position: relative;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 4px;
+}
+.Occurences-item-fill {
+  position: absolute;
+  left: 0px;
+  top: 1px;
+  bottom: 1px;
+  background-color: var(--color-grey-lt);
+}

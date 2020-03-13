@@ -6,6 +6,7 @@ export default function Editor(props) {
   const storage = window.localStorage;
   const storageKey = props.storageKey || "Editor";
   const isReadOnly = props.isReadOnly;
+  const root = props.path || "#root";
 
   const [schema, setSchema] = useState({});
   const [types, setTypes] = useState({});
@@ -56,7 +57,7 @@ export default function Editor(props) {
               <Field
                 key={i}
                 id={k}
-                path={k}
+                path={root + "/" + k}
                 schema={v}
                 types={types}
                 isReadOnly={isReadOnly}

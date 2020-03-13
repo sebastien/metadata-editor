@@ -19,7 +19,7 @@ export default function Composite(props) {
                 id={fieldKey}
                 schema={resolveSchema(fieldSchema, types)}
                 types={props.types}
-                path={props.path ? props.path + "." + fieldKey : fieldKey}
+                path={props.path ? props.path + "/" + fieldKey : fieldKey}
                 isReadOnly={isReadOnly}
                 defaultValue={fieldValue}
                 onChange={(v, key) => {

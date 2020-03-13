@@ -34,7 +34,11 @@
         "content": {
           "type": "composite",
           "fields": {
-            "description": { "type": "text" }
+            "description": { "type": "text" },
+            "preview": {
+              "type": "distribution-preview",
+              "select": "dataset/{dataset}/dimension/{this.key}"
+            }
           }
         }
       }

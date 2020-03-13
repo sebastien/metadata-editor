@@ -9,6 +9,7 @@ import Composite from "./Composite";
 import Section from "./Section";
 import Collection from "./Collection";
 import TablePreview from "./TablePreview";
+import DistributionPreview from "./DistributionPreview";
 import { assert } from "../utils";
 
 /**
@@ -120,6 +121,8 @@ export default function Field(props) {
     return <Collection {...props} />;
   } else if (type === "table-preview") {
     return <TablePreview {...props} />;
+  } else if (type === "distribution-preview") {
+    return <DistributionPreview {...props} />;
   } else {
     // We store the type as we're going to use it quite often.
     if (props.mode === "read" || isReadOnly) {

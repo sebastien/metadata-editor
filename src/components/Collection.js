@@ -14,7 +14,7 @@ import Down from "@atlaskit/icon/glyph/arrow-down";
 export default function Collection(props) {
   const value = props.defaultValue || [];
   const schema = props.schema;
-  const contentSchema = resolveSchema(schema.children, props.types);
+  const contentSchema = resolveSchema(schema.content, props.types);
 
   const isReadOnly = props.isReadOnly;
 
@@ -138,8 +138,8 @@ export default function Collection(props) {
                 </div>
                 <div className="Collection-list-item-body">
                   <Field
-                    id={i}
-                    path={props.path ? props.path + "." + i : i}
+                    id={k}
+                    path={props.path ? props.path + "/" + k : k}
                     schema={contentSchema}
                     types={props.types}
                     isReadOnly={isReadOnly}

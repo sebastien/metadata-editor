@@ -51,7 +51,7 @@ export default function TablePreview(props) {
         data={grid}
         valueRenderer={cell => cell.value}
         onCellsChanged={changes => {
-          console.log("Changes", changes);
+          console.log("Cchanges", changes);
           // const grid = this.state.grid.map(row => [...row])
           // changes.forEach(({cell, row, col, value}) => {
           //   grid[row][col] = {...grid[row][col], value}
