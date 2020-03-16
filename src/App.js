@@ -8,6 +8,7 @@ import {
   withNavigationViewController
 } from "@atlaskit/navigation-next";
 import EditorPage from "./pages/EditorPage";
+import DomainPage from "./pages/DomainPage";
 import CataloguePage from "./pages/CataloguePage";
 
 import "./styles.css";
@@ -73,6 +74,13 @@ const productHomeView = {
           id: "datasets",
           text: "Datasets",
           to: "/datasets"
+        },
+        {
+          type: "InlineComponent",
+          component: LinkItem,
+          id: "domain",
+          text: "Domain",
+          to: "/domain"
         }
       ]
     }
@@ -99,6 +107,16 @@ const EditorRouteBase = props => {
 };
 const EditorRoute = withNavigationViewController(EditorRouteBase);
 
+const DomainRouteBase = props => {
+  const navigationViewController = props.navigationViewController;
+  useEffect(() => {
+    navigationViewController.setView(productHomeView.id);
+  }, [navigationViewController]);
+
+  return <DomainPage dataset={props.match.params.datasetId} />;
+};
+const DomainRoute = withNavigationViewController(DomainRouteBase);
+
 const App = props => {
   const navigationViewController = props.navigationViewController;
   useEffect(
@@ -115,6 +133,7 @@ const App = props => {
           path={["/datasets/:prefix", "/datasets"]}
           component={CatalogueRoute}
         />
+        <Route path="/domain" component={DomainRoute} />
         <Route path="/editor/:datasetId" component={EditorRoute} />
       </Switch>
     </LayoutManagerWithViewController>

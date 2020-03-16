@@ -9,6 +9,7 @@ body {
   --color-grey-lt: #f0f0f0;
   --color-grey-ltr: #fafafa;
   --color-text-body: #172b4d;
+  --color-grey: #afb6c2;
   --color-grey-dk: #6b778c;
 
   font-family: var(--font-family);
@@ -22,6 +23,7 @@ body {
   align-items: center;
 }
 
+.DomainPage,
 .CataloguePage,
 .EditorPage {
   padding: 18px;
@@ -34,6 +36,21 @@ body {
   padding-top: 18px;
   background-color: var(--color-grey-ltr);
   border-top: 2px solid var(--color-grey-lt);
+}
+
+.DomainPage-body {
+  display: flex;
+}
+
+.DomainPage-body-tree {
+  flex-basis: 200px;
+  border-right: 1px solid var(--color-grey-lt);
+  margin-right: 8px;
+  padding-right: 8px;
+}
+
+.DomainPage-body-detail {
+  flex-grow: 1;
 }
 
 .Editor {
@@ -129,6 +146,10 @@ body {
   border-top: 0px solid #f0f0f0;
 }
 
+.Section-body {
+  overflow: auto;
+}
+
 .Section-header {
   display: flex;
   padding-left: 16px;
@@ -215,4 +236,105 @@ body {
   top: 1px;
   bottom: 1px;
   background-color: var(--color-grey-lt);
+}
+
+.SemanticAttribute,
+.SemanticRelation {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid var(--color-grey-lt);
+  font-size: 12px;
+  line-height: 1.25em;
+}
+
+.SemanticAttribute .SemanticAttribute-actions {
+  opacity: 0.15;
+}
+
+.SemanticAttribute:hover .SemanticAttribute-actions {
+  opacity: 1;
+}
+
+.SemanticAttribute:last-child,
+.SemanticRelation:last-child {
+  border-bottom: 1px solid var(--color-grey-lt);
+}
+
+.SemanticAttribute-sep {
+  align-self: stretch;
+  padding-left: 8px;
+  padding-right: 8px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-grey-ltr);
+  color: var(--color-grey);
+}
+
+.SemanticAttribute-name {
+  background-color: var(--color-grey-ltr);
+}
+
+.SemanticAttribute-name,
+.SemanticAttribute-value,
+.SemanticAttribute-qualifier,
+.SemanticRelation-name,
+.SemanticRelation-object,
+.SemanticRelation-value {
+  flex-basis: 30%;
+  flex-grow: grow;
+}
+
+.SemanticAttribute-value {
+  flex-basis: 50%;
+}
+
+.SemanticAttribute-qualifier {
+  flex-basis: 20%;
+}
+
+.Hierarchy-item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.Hierarchy-item-icon {
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+.Hierarchy-item-icon:before {
+  content: "►";
+  display: inline-block;
+  width: 16px;
+  color: var(--color-grey);
+}
+
+.Hierarchy-item-icon[data-state~="expanded"]:before {
+  content: "▼";
+}
+
+.Hierarchy-item-icon[data-state~="empty"]:before {
+  content: " ";
+}
+
+.Hierarchy-item-icon:after {
+  content: "@";
+  display: inline-block;
+  width: 16px;
+}
+
+.Hierarchy-item-label {
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.Hierarchy-item:hover .Hierarchy-item-label {
+  background-color: var(--color-grey-lt);
+}
+
+.Hierarchy-item[data-state~="selected"] .Hierarchy-item-label {
+  font-weight: bold;
 }

@@ -6,7 +6,7 @@ import { api } from "../api";
 import { swallow, head } from "../utils/functional";
 
 export default function TablePreview(props) {
-  const dataset = "findur.creditRatings";
+  const dataset = props.path.split("/", 1)[0];
   const limit = props.limit || 30;
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([[]]);
@@ -43,22 +43,24 @@ export default function TablePreview(props) {
     [dataset]
   );
 
-  console.log("RENDER TABLE");
   // SEE: https://github.com/nadbm/react-datasheet
   return (
     <div className="TablePreview">
-      <ReactDataSheet
-        data={grid}
-        valueRenderer={cell => cell.value}
-        onCellsChanged={changes => {
-          console.log("Cchanges", changes);
-          // const grid = this.state.grid.map(row => [...row])
-          // changes.forEach(({cell, row, col, value}) => {
-          //   grid[row][col] = {...grid[row][col], value}
-          // })
-          // this.setState({grid})
-        }}
-      />
+      {grid.length === 0 ? (
+        <div class="TablePreview-empty">No data available</div>
+      ) : (
+        <ReactDataSheet
+          data={grid}
+          valueRenderer={cell => cell.value}
+          onCellsChanged={changes => {
+            // const grid = this.state.grid.map(row => [...row])
+            // changes.forEach(({cell, row, col, value}) => {
+            //   grid[row][col] = {...grid[row][col], value}
+            // })
+            // this.setState({grid})
+          }}
+        />
+      )}
     </div>
   );
 }
