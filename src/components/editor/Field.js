@@ -8,9 +8,11 @@ import Group from "@atlaskit/tag-group";
 import Composite from "./Composite";
 import Section from "./Section";
 import Collection from "./Collection";
+import Element from "./Element";
 import DistributionPreview from "../preview/DistributionPreview";
 import TablePreview from "../preview/TablePreview";
 import { assert } from "../../utils";
+import { firstdef } from "../../utils/functional";
 
 /**
  * Ensures that the given schema (either an object or string) is
@@ -106,7 +108,10 @@ export default function Field(props) {
   const defaultValue = props.defaultValue;
   const schema = props.schema || {};
   const type = schema.type;
-  const isReadOnly = props.isReadOnly;
+  const mode = props.mode || schema.mode;
+  const label = firstdef(props.label, schema.label);
+  const isReadOnly =
+    props.isReadOnly === undefined ? schema.isReadOnly : props.isReadOnly;
 
   // If it's a section, things are much simpler, we just display a label,
   // and then iterate.
@@ -117,23 +122,36 @@ export default function Field(props) {
     return <Section {...props} />;
   } else if (type === "composite") {
     return <Composite {...props} />;
-  } else if (type === "collection") {
+  } else if (type === "collection" || type === "list") {
     return <Collection {...props} />;
+  } else if (type === "element") {
+    return <Element {...props} />;
   } else if (type === "table-preview") {
     return <TablePreview {...props} />;
   } else if (type === "distribution-preview") {
     return <DistributionPreview {...props} />;
+  } else if (type === "separator") {
+    return (
+      <div className="Field__separator">
+        {label ? <div className="Field__separator-label">{label}</div> : null}{" "}
+      </div>
+    );
   } else {
     // We store the type as we're going to use it quite often.
-    if (props.mode === "read" || isReadOnly) {
+    if (mode === "read" || isReadOnly) {
       return (
-        <div className="Field" data-state="readonly">
-          <div className="Field-label">{schema.label || props.id}</div>
+        <div className="Field" data-state="readonly" data-type={type}>
+          {label ? <div className="Field-label">{label}</div> : null}
           {FieldViewFactory(props, defaultValue)(props)}
         </div>
       );
-    } else if (props.mode === "edit") {
-      return FieldEditorFactory(props, defaultValue)(props);
+    } else if (mode === "edit") {
+      return (
+        <div className="Field" data-state="readwrite" data-type={type}>
+          {label ? <div className="Field-label">{label}</div> : null}
+          {FieldEditorFactory(props, defaultValue)(props)}
+        </div>
+      );
     } else {
       // This picks the edit and read views for the field based on its
       // type.
@@ -142,9 +160,7 @@ export default function Field(props) {
 
       return (
         <InlineEdit
-          label={
-            props.hasLabel !== false ? schema.label || props.id : undefined
-          }
+          label={label}
           editView={editView}
           readView={readView}
           defaultValue={defaultValue}

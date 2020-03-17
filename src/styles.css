@@ -87,18 +87,60 @@ body {
   margin-bottom: 8px;
   margin-top: 8px;
 }
-.Field-label {
+
+.Field__separator {
+  text-align: center;
+}
+
+.Field-label,
+.Collection-label {
   color: var(--color-grey-dk);
   font-size: 12px;
   font-weight: 600;
 }
+
+/* ---------------------------------------------------------------------------
+   ELEMENT
+   --------------------------------------------------------------------------- */
+.Element-option-id {
+  font-size: 11px;
+  color: var(--color-grey);
+}
+
+.Element-option-description {
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------
+   COMPOSITE
+   --------------------------------------------------------------------------- */
 
 .Composite-list,
 .Composite-list-item {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  flex-grow: 1;
 }
+
+.Collection-list-item .Collection-list-item-header-actions {
+  transition-property: opacity;
+  transition-duration: 0.25s;
+  opacity: 0.1;
+}
+.Collection-list-item:hover .Collection-list-item-header-actions {
+  opacity: 1;
+}
+
+.Composite-list[data-layout="horizontal"] {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------
+   COLLECTION
+   --------------------------------------------------------------------------- */
 
 .Collection-list,
 .Collection-list-item {
@@ -108,7 +150,8 @@ body {
 }
 
 .Collection-list-item {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .Collection-list-item-header {
@@ -135,6 +178,39 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+
+.Collection[data-type="list"] .Collection-list-item {
+  display: flex;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+}
+
+.Collection[data-type="list"] .Collection-list-item-body {
+  order: 0;
+  flex-grow: 1;
+}
+
+.Collection[data-type="list"] .Collection-list-item-header {
+  order: 1;
+  min-height: 0em;
+  border-bottom: 0px solid var(--color-grey-lt);
+}
+
+.Collection[data-type="list"] .Collection-list-item-header-tag,
+.Collection[data-type="list"] .Collection-list-item-header-key {
+  display: none;
+}
+
+.Collection[data-style="grid"] .Collection-list-item {
+  border-bottom: 1px solid var(--color-grey-lt);
+}
+.Collection[data-style="grid"] .Collection-list-item:last-child {
+  border-bottom: 0px solid var(--color-grey-lt);
+}
+
+/* ---------------------------------------------------------------------------
+   SECTION
+   --------------------------------------------------------------------------- */
 
 .Section {
   padding-top: 8px;

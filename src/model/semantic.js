@@ -58,15 +58,26 @@ class Semantic {
     this.id = id;
     this.store = store || STORE;
     this.labels = {};
+    this.scope = undefined;
     this.relations = [];
     this.definitions = {};
   }
-  setLabel(value, ref) {
-    this.labels[ref || CANONICAL] = value;
+  get label() {
+    return this.labels[CANONICAL];
+  }
+  get definition() {
+    return this.definitions[CANONICAL];
+  }
+  scoped(value) {
+    this.scope = value;
     return this;
   }
-  setDefinition(value, ref) {
+  is(value, ref) {
     this.definitions[ref || CANONICAL] = value;
+    return this;
+  }
+  as(value, ref) {
+    this.labels[ref || CANONICAL] = value;
     return this;
   }
 
@@ -75,9 +86,6 @@ class Semantic {
       this.store.register(new Quadruple(this, relation, object, qualifier))
     );
     return this;
-  }
-  as(value) {
-    return swallow(this.setLabel(value), this);
   }
 }
 
@@ -133,7 +141,6 @@ export class Vocabulary extends SemanticFactory {
     super(_ => {
       this.catalogue[_.id] = _;
     });
-    console.log("VOCAB", label);
     this.label = label;
     this.groups = {};
     this.catalogue = {};
@@ -149,8 +156,9 @@ export class Vocabulary extends SemanticFactory {
     const prefix = this.label ? this.label + ":" : "";
     return list(this.catalogue).map(_ => {
       return {
-        label: prefix + (_.labels[CANONICAL] || _.id),
-        description: "Lorem ipsum dolor sit amet",
+        id: _.label ? null : prefix + _.id,
+        label: _.label || _.id,
+        description: _.definition,
         value: _
       };
     });
@@ -166,13 +174,19 @@ export const RDFS = vocabulary(
   "https://www.w3.org/TR/rdf-schema/#",
   "rdfs"
 ).define((def, rdfs) => {
-  def.concept("Resource");
-  def.concept("Class");
+  def
+    .concept("Resource")
+    .is("All things in RDFs are *resources*")
+    .scoped("technical");
+  def.concept("Class").is("Defines a group of resources");
   def.concept("Literal");
-  def.concept("Property");
+  def.concept("Property").is("A property of a resource");
   def.concept("Datatype");
 
-  def.relation("isa");
+  def
+    .relation("subClassOf", rdfs.Class, rdfs.Class)
+    .as("is a")
+    .is("Class A is a subclass of class B");
 
   def.attribute("range").rel(rdfs.isa, rdfs.Property);
   def.attribute("domain").rel(rdfs.isa, rdfs.Property);
@@ -184,14 +198,22 @@ export const SKOS = new vocabulary(
   "http://www.w3.org/2004/02/skos/core#",
   "skos"
 ).define((def, skos) => {
-  def.group("Concepts", def.concept("Collection"), def.concept("Concept"));
+  def.group(
+    "Concepts",
+    def.concept("Collection"),
+    def.concept("Concept").is("an idea or a notion, a unit of thought")
+  );
   def.group(
     "Description",
     def.attribute("definition"),
     def.attribute("label"),
     def.attribute("example")
   );
-  def.relation("narrower");
-  def.relation("broader");
-  def.relation("related");
+  def
+    .relation("narrower")
+    .is("tells that concept A is more specific (narrow) than concept B");
+  def
+    .relation("broader")
+    .is("tells that concept A is less specific (broader) than concept B");
+  def.relation("related").is("tells that concept A is related to concept B");
 });

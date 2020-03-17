@@ -4,12 +4,12 @@ import Field from "./editor/Field";
 
 export default function Editor(props) {
   const storage = window.localStorage;
+  const schema = props.schema;
+  const types = props.types;
   const storageKey = props.storageKey || "Editor";
   const isReadOnly = props.isReadOnly;
   const root = props.path || "#root";
 
-  const [schema, setSchema] = useState({});
-  const [types, setTypes] = useState({});
   const [value, setValue] = useState(props.defaultValue || {});
 
   // FIXME: This does not quite work
@@ -20,32 +20,6 @@ export default function Editor(props) {
   useEffect(() => {
     setValue(props.defaultValue);
   }, [props.defaultValue]);
-
-  const schema_url = props.schema || "schema.json";
-  useEffect(() => {
-    async function fetchData() {
-      fetch(schema_url)
-        .then(_ => {
-          return _.json();
-        })
-        .then(_ => {
-          // We extract the types from the schema, as they can be used
-          // later on.
-          const [schema, types] = Object.entries(_)
-            .reduce(
-              (ab, kv) => {
-                (kv[0].startsWith("#") ? ab[1] : ab[0]).push(kv);
-                return ab;
-              },
-              [[], []]
-            )
-            .map(_ => Object.fromEntries(_));
-          setTypes(types);
-          setSchema(schema);
-        });
-    }
-    fetchData();
-  }, [schema_url]);
 
   return (
     <div className="Editor">
@@ -66,8 +40,10 @@ export default function Editor(props) {
                   const res = { ...value };
                   res[k] = v;
                   setValue(res);
-                  storage.setItem(storageKey, JSON.stringify(res));
-                  props.onChange(res);
+                  if (props.persist) {
+                    storage.setItem(storageKey, JSON.stringify(res));
+                  }
+                  props && props.onChange && props.onChange(res);
                 }}
               />
             );

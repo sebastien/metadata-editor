@@ -17,6 +17,8 @@ export default props => {
   const datasetId = props.dataset || null;
   const [isReadOnly, setReadOnly] = useState(true);
   const [value, setValue] = useState(undefined);
+  const [schema, setSchema] = useState(props.schem);
+  const [types, setTypes] = useState({});
 
   const [datasetValue, setDatasetValue] = useState(null);
 
@@ -24,6 +26,32 @@ export default props => {
     _.slice(0, -1).join("."),
     _[_.length - 1]
   ])((datasetId || "").split("."));
+
+  const schema_url = props.schema || "schema.json";
+  useEffect(() => {
+    async function fetchData() {
+      fetch(schema_url)
+        .then(_ => {
+          return _.json();
+        })
+        .then(_ => {
+          // We extract the types from the schema, as they can be used
+          // later on.
+          const [schema, types] = Object.entries(_)
+            .reduce(
+              (ab, kv) => {
+                (kv[0].startsWith("#") ? ab[1] : ab[0]).push(kv);
+                return ab;
+              },
+              [[], []]
+            )
+            .map(_ => Object.fromEntries(_));
+          setTypes(types);
+          setSchema(schema);
+        });
+    }
+    fetchData();
+  }, [schema_url]);
 
   const breadcrumbs = (
     <BreadcrumbsStateless>
@@ -114,6 +142,7 @@ export default props => {
       <div className="EditorPage-editor">
         <Editor
           schema={props.schema}
+          types={props.types}
           path={datasetId}
           defaultValue={datasetValue}
           isReadOnly={isReadOnly}

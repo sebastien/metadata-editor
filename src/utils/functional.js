@@ -2,6 +2,25 @@ export function swallow(value, returns) {
   return returns;
 }
 
+export function firstdef(value) {
+  switch (arguments.length) {
+    case 0:
+      return undefined;
+    case 1:
+      return firstdef.apply(this, value);
+    default:
+      var i = 0;
+      while (i < arguments.length) {
+        let v = arguments[i];
+        if (v !== undefined) {
+          return v;
+        }
+        i += 1;
+      }
+      return undefined;
+  }
+}
+
 export function idem(value) {
   return value;
 }
