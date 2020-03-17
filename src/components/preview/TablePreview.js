@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactDataSheet from "react-datasheet";
 import "react-datasheet/lib/react-datasheet.css";
 
-import { api } from "../api";
-import { swallow, head } from "../utils/functional";
+import { api } from "../../api";
+import { swallow, head } from "../../utils/functional";
 
 export default function TablePreview(props) {
   const dataset = props.path.split("/", 1)[0];

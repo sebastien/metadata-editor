@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@atlaskit/button";
-import Field from "./Field";
+import Field from "./editor/Field";
 
 export default function Editor(props) {
   const storage = window.localStorage;

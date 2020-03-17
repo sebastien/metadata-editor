@@ -6,7 +6,7 @@ import TableTree, {
   Row,
   Cell
 } from "@atlaskit/table-tree";
-import { api } from "../api";
+import { api } from "../../api";
 import {
   items,
   nth,
@@ -14,7 +14,7 @@ import {
   sprintf,
   max,
   rescale
-} from "../utils/functional";
+} from "../../utils/functional";
 
 function Occurences(props) {
   const range = [0, 1.25 * (max(props.items) / props.count)];

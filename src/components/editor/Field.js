@@ -8,9 +8,9 @@ import Group from "@atlaskit/tag-group";
 import Composite from "./Composite";
 import Section from "./Section";
 import Collection from "./Collection";
-import TablePreview from "./TablePreview";
-import DistributionPreview from "./DistributionPreview";
-import { assert } from "../utils";
+import DistributionPreview from "../preview/DistributionPreview";
+import TablePreview from "../preview/TablePreview";
+import { assert } from "../../utils";
 
 /**
  * Ensures that the given schema (either an object or string) is
