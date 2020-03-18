@@ -1,22 +1,40 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import PageHeader from "@atlaskit/page-header";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Hierarchy from "../components/semantic/Hierarchy";
 import Concept from "../components/semantic/Concept";
+import { SemanticStore } from "../model/semantic";
+
+export const DomainView = {
+  id: "domain/home",
+  type: "container",
+  getItems: () => [
+    {
+      type: "HeaderSection",
+      id: "domain/home:header",
+      items: [
+        {
+          id: "domain-hierarchy",
+          type: "InlineComponent",
+          component: Hierarchy,
+          wrapItem: (children, item) => (
+            <Link to={"/domain/" + item.id}>{children}</Link>
+          )
+        }
+      ]
+    }
+  ]
+};
 
 export default function DomainPage(props) {
-  const [selected, setSelected] = useState(undefined);
-  const onItemSelect = item => {
-    setSelected(item.id);
-  };
-
   const breadcrumbs = (
     <BreadcrumbsStateless>
       <BreadcrumbsItem text="Domain" href="#/domain" key="0" />
-      {selected ? (
+      {concept ? (
         <BreadcrumbsItem
-          text={selected.id}
-          href={`#/domain/${selected.id}`}
+          text={concept.id}
+          href={`#/domain/${concept.id}`}
           key="1"
         />
       ) : null}
@@ -25,13 +43,13 @@ export default function DomainPage(props) {
 
   return (
     <div className="DomainPage">
-      <PageHeader breadcrumbs={breadcrumbs}>Domain Page</PageHeader>
+      <PageHeader breadcrumbs={breadcrumbs}> Concept {concept.id}</PageHeader>
       <div className="DomainPage-body">
-        <div className="DomainPage-body-tree">
+        {/*<div className="DomainPage-body-tree">
           <Hierarchy onSelect={onItemSelect} />
-        </div>
+  </div>*/}
         <div className="DomainPage-body-detail">
-          <Concept name={selected} />
+          <Concept id={concept} />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { swallow, list } from "../utils/functional";
+import { assert, error } from "../utils/assert";
 
 // TODO: We should probably do a Managed class
 // TODO: This module should be reformatted and include proper documentation.
@@ -6,7 +7,7 @@ import { swallow, list } from "../utils/functional";
 const CANONICAL = "#canonical";
 const ANY = undefined;
 
-class Quadruple {
+export class Quadruple {
   constructor(subject, relation, object, value) {
     this.subject = relation;
     this.relation = relation;
@@ -27,7 +28,7 @@ class Quadruple {
   }
 }
 
-class QuadStore {
+export class QuadStore {
   constructor() {
     this.quadruples = [];
   }
@@ -50,10 +51,39 @@ class QuadStore {
     }
   }
 }
-const STORE = new QuadStore();
+
+export class SemanticStore extends QuadStore {
+  constructor() {
+    super();
+    this.attributes = {};
+    this.concepts = {};
+    this.relations = {};
+  }
+  register(semantic) {
+    if (semantic instanceof Attribute) {
+      assert(!this.attributes[semantic.id]);
+      this.attributes[semantic.id] = semantic;
+    } else if (semantic instanceof Concept) {
+      assert(!this.concepts[semantic.id]);
+      this.concepts[semantic.id] = semantic;
+    } else if (semantic instanceof Relation) {
+      assert(!this.relations[semantic.id]);
+      this.relations[semantic.id] = semantic;
+    } else {
+      error("Semantic type not supported", semantic);
+    }
+    return semantic 
+  }
+  ensureConcept(id){
+    r
+
+  }
+}
+
+export const STORE = new SemanticStore();
 export const quad = (s, r, o, v) => new Quadruple(s, r, o, v);
 
-class Semantic {
+export class Semantic {
   constructor(id, store) {
     this.id = id;
     this.store = store || STORE;
@@ -61,6 +91,7 @@ class Semantic {
     this.scope = undefined;
     this.relations = [];
     this.definitions = {};
+    this.store.register(self);
   }
   get label() {
     return this.labels[CANONICAL];
@@ -168,6 +199,9 @@ export class Vocabulary extends SemanticFactory {
 // NOTE: These vocabularies should be extracted out in a separate file. They should be
 // curated so that the more complex/less frequent relations/attributes appear last.
 export const vocabulary = (a, b) => new Vocabulary(a, b);
+export const concept = (a, b) => new Concept(a, b);
+export const attribute = (a, b) => new Attribute(a, b);
+export const relation = (a, b) => new Relation(a, b);
 
 // SEE: https://www.w3.org/TR/rdf-schema/
 export const RDFS = vocabulary(

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Tree, { mutateTree, moveItemOnTree } from "@atlaskit/tree";
+import { idem } from "../../utils/functional";
 
 const PADDING_PER_LEVEL = 16;
 
@@ -35,23 +36,28 @@ export default function Hierarchy(props) {
           "Entity/Swap.USD",
           "Entity/Swap.EUR",
           "Entity/EUR/USD_BasisSwap.EUR"
-        ].reduce((tree, path) => {
-          var node = tree.items["#root"];
-          path.split("/").forEach(id => {
-            const next = (tree.items[id] = tree.items[id] || {
-              id: id,
-              children: [],
-              data: { label: id }
+        ].reduce(
+          (tree, path) => {
+            var node = tree.items["#root"];
+            path.split("/").forEach(id => {
+              const next = (tree.items[id] = tree.items[id] || {
+                id: id,
+                children: [],
+                data: { label: id }
+              });
+              if (node.children.indexOf(next.id) === -1) {
+                node.children.push(id);
+              }
+              node = next;
             });
-            if (node.children.indexOf(next.id) === -1) {
-              node.children.push(id);
-            }
-            node = next;
-          });
-          return tree;
-        }, tree)
+            return tree;
+          },
+          { ...tree }
+        )
       ),
-    [tree]
+    // FIXME: We should put tree.revision or something like that. If we
+    // put just the tree, this will loop.
+    []
   );
 
   const onExpand = itemId => {
@@ -63,7 +69,6 @@ export default function Hierarchy(props) {
   };
 
   const onToggle = item => {
-    console.log("ITEM", item.isExpanded, ":", item);
     item.isExpanded ? onCollapse(item.id) : onExpand(item.id);
   };
 
@@ -98,25 +103,30 @@ export default function Hierarchy(props) {
           }
         />
 
-        <div
-          className="Hierarchy-item-label"
-          onClick={_ => (props.onSelect ? props.onSelect(item, _) : null)}
-        >
-          {item.data ? item.data.label : item.id}
-        </div>
+        {(props.wrapItem || idem)(
+          <div
+            className="Hierarchy-item-label"
+            onClick={_ => (props.onSelect ? props.onSelect(item, _) : null)}
+          >
+            {item.data ? item.data.label : item.id}
+          </div>,
+          item
+        )}
       </div>
     );
   };
 
   return (
-    <Tree
-      tree={tree}
-      renderItem={renderItem}
-      onExpand={onExpand}
-      onCollapse={onCollapse}
-      onDragEnd={onDragEnd}
-      offsetPerLevel={PADDING_PER_LEVEL}
-      isDragEnabled
-    />
+    <div className="Hierarchy">
+      <Tree
+        tree={tree}
+        renderItem={renderItem}
+        onExpand={onExpand}
+        onCollapse={onCollapse}
+        onDragEnd={onDragEnd}
+        offsetPerLevel={PADDING_PER_LEVEL}
+        isDragEnabled={true}
+      />
+    </div>
   );
 }

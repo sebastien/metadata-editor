@@ -62,7 +62,6 @@ const formatOptionLabel = option => (
 export default function Element(props) {
   const schema = props.schema || {};
   const options = firstdef(props.options, schema.options);
-  console.log("OPTIONS", options);
   return (
     <div className="Element">
       <CreatableSelect

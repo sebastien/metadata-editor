@@ -8,7 +8,7 @@ import {
   withNavigationViewController
 } from "@atlaskit/navigation-next";
 import EditorPage from "./pages/EditorPage";
-import DomainPage from "./pages/DomainPage";
+import DomainPage, { DomainView } from "./pages/DomainPage";
 import CataloguePage from "./pages/CataloguePage";
 
 import "./styles.css";
@@ -110,10 +110,10 @@ const EditorRoute = withNavigationViewController(EditorRouteBase);
 const DomainRouteBase = props => {
   const navigationViewController = props.navigationViewController;
   useEffect(() => {
-    navigationViewController.setView(productHomeView.id);
+    navigationViewController.setView(DomainView.id);
   }, [navigationViewController]);
 
-  return <DomainPage dataset={props.match.params.datasetId} />;
+  return <DomainPage concept={props.match.params.concept} />;
 };
 const DomainRoute = withNavigationViewController(DomainRouteBase);
 
@@ -122,6 +122,7 @@ const App = props => {
   useEffect(
     _ => {
       navigationViewController.addView(productHomeView);
+      navigationViewController.addView(DomainView);
     },
     [navigationViewController]
   );
@@ -133,7 +134,7 @@ const App = props => {
           path={["/datasets/:prefix", "/datasets"]}
           component={CatalogueRoute}
         />
-        <Route path="/domain" component={DomainRoute} />
+        <Route path={["/domain/:concept", "/domain"]} component={DomainRoute} />
         <Route path="/editor/:datasetId" component={EditorRoute} />
       </Switch>
     </LayoutManagerWithViewController>

@@ -60,7 +60,6 @@ export default function Collection(props) {
     }
   };
 
-  console.log("COLLECTION STYLE", style);
   return (
     <div className="Collection" data-type={type} data-style={style}>
       {label ? <div className="Collection-label">{label}</div> : null}
