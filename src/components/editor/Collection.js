@@ -4,6 +4,7 @@ import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Tag from "@atlaskit/tag";
 import Field, { resolveSchema } from "./Field";
+import { firstdef } from "../../utils/functional";
 
 // SEE: https://atlaskit.atlassian.com/packages/core/icon/example/icon-explorer
 import Remove from "@atlaskit/icon/glyph/editor/remove";
@@ -14,6 +15,9 @@ import Down from "@atlaskit/icon/glyph/arrow-down";
 export default function Collection(props) {
   const value = props.defaultValue || [];
   const schema = props.schema;
+  const label = firstdef(props.label, schema.label);
+  const type = firstdef(props.type, schema.type);
+  const style = firstdef(props.style, schema.style);
   const contentSchema = resolveSchema(schema.content, props.types);
 
   const isReadOnly = props.isReadOnly;
@@ -57,10 +61,8 @@ export default function Collection(props) {
   };
 
   return (
-    <div className="Collection">
-      {props.label ? (
-        <div className="Collection-label">{props.label}</div>
-      ) : null}
+    <div className="Collection" data-type={type} data-style={style}>
+      {label ? <div className="Collection-label">{label}</div> : null}
       <ul className="Collection-list">
         {value.length === 0 ? (
           <li>
@@ -110,24 +112,18 @@ export default function Collection(props) {
                   </div>
                   {isReadOnly ? null : (
                     <div className="Collection-list-item-header-actions">
-                      {i > 0 ? (
-                        <Button
-                          onClick={() => moveUp(i)}
-                          appearance="subtle"
-                          iconBefore={<Up label="move item up" />}
-                        />
-                      ) : (
-                        undefined
-                      )}
-                      {i < value.length - 1 ? (
-                        <Button
-                          onClick={() => moveDown(i)}
-                          appearance="subtle"
-                          iconBefore={<Down label="move item down" />}
-                        />
-                      ) : (
-                        undefined
-                      )}
+                      <Button
+                        onClick={() => moveUp(i)}
+                        isDisabled={i === 0}
+                        appearance="subtle"
+                        iconBefore={<Up label="move item up" />}
+                      />
+                      <Button
+                        onClick={() => moveDown(i)}
+                        isDisabled={i === value.length - 1}
+                        appearance="subtle"
+                        iconBefore={<Down label="move item down" />}
+                      />
                       <Button
                         onClick={() => removeItem(i)}
                         appearance="subtle"

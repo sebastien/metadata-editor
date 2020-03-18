@@ -9,6 +9,7 @@ body {
   --color-grey-lt: #f0f0f0;
   --color-grey-ltr: #fafafa;
   --color-text-body: #172b4d;
+  --color-grey: #afb6c2;
   --color-grey-dk: #6b778c;
 
   font-family: var(--font-family);
@@ -22,6 +23,7 @@ body {
   align-items: center;
 }
 
+.DomainPage,
 .CataloguePage,
 .EditorPage {
   padding: 18px;
@@ -34,6 +36,21 @@ body {
   padding-top: 18px;
   background-color: var(--color-grey-ltr);
   border-top: 2px solid var(--color-grey-lt);
+}
+
+.DomainPage-body {
+  display: flex;
+}
+
+.DomainPage-body-tree {
+  flex-basis: 200px;
+  border-right: 1px solid var(--color-grey-lt);
+  margin-right: 8px;
+  padding-right: 8px;
+}
+
+.DomainPage-body-detail {
+  flex-grow: 1;
 }
 
 .Editor {
@@ -70,18 +87,60 @@ body {
   margin-bottom: 8px;
   margin-top: 8px;
 }
-.Field-label {
+
+.Field__separator {
+  text-align: center;
+}
+
+.Field-label,
+.Collection-label {
   color: var(--color-grey-dk);
   font-size: 12px;
   font-weight: 600;
 }
+
+/* ---------------------------------------------------------------------------
+   ELEMENT
+   --------------------------------------------------------------------------- */
+.Element-option-id {
+  font-size: 11px;
+  color: var(--color-grey);
+}
+
+.Element-option-description {
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------------
+   COMPOSITE
+   --------------------------------------------------------------------------- */
 
 .Composite-list,
 .Composite-list-item {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  flex-grow: 1;
 }
+
+.Collection-list-item .Collection-list-item-header-actions {
+  transition-property: opacity;
+  transition-duration: 0.25s;
+  opacity: 0.1;
+}
+.Collection-list-item:hover .Collection-list-item-header-actions {
+  opacity: 1;
+}
+
+.Composite-list[data-layout="horizontal"] {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------
+   COLLECTION
+   --------------------------------------------------------------------------- */
 
 .Collection-list,
 .Collection-list-item {
@@ -91,7 +150,8 @@ body {
 }
 
 .Collection-list-item {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .Collection-list-item-header {
@@ -119,6 +179,39 @@ body {
   justify-content: flex-end;
 }
 
+.Collection[data-type="list"] .Collection-list-item {
+  display: flex;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+}
+
+.Collection[data-type="list"] .Collection-list-item-body {
+  order: 0;
+  flex-grow: 1;
+}
+
+.Collection[data-type="list"] .Collection-list-item-header {
+  order: 1;
+  min-height: 0em;
+  border-bottom: 0px solid var(--color-grey-lt);
+}
+
+.Collection[data-type="list"] .Collection-list-item-header-tag,
+.Collection[data-type="list"] .Collection-list-item-header-key {
+  display: none;
+}
+
+.Collection[data-style="grid"] .Collection-list-item {
+  border-bottom: 1px solid var(--color-grey-lt);
+}
+.Collection[data-style="grid"] .Collection-list-item:last-child {
+  border-bottom: 0px solid var(--color-grey-lt);
+}
+
+/* ---------------------------------------------------------------------------
+   SECTION
+   --------------------------------------------------------------------------- */
+
 .Section {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -127,6 +220,10 @@ body {
 
 .Section:first-child {
   border-top: 0px solid #f0f0f0;
+}
+
+.Section-body {
+  overflow: auto;
 }
 
 .Section-header {
@@ -215,4 +312,105 @@ body {
   top: 1px;
   bottom: 1px;
   background-color: var(--color-grey-lt);
+}
+
+.SemanticAttribute,
+.SemanticRelation {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid var(--color-grey-lt);
+  font-size: 12px;
+  line-height: 1.25em;
+}
+
+.SemanticAttribute .SemanticAttribute-actions {
+  opacity: 0.15;
+}
+
+.SemanticAttribute:hover .SemanticAttribute-actions {
+  opacity: 1;
+}
+
+.SemanticAttribute:last-child,
+.SemanticRelation:last-child {
+  border-bottom: 1px solid var(--color-grey-lt);
+}
+
+.SemanticAttribute-sep {
+  align-self: stretch;
+  padding-left: 8px;
+  padding-right: 8px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-grey-ltr);
+  color: var(--color-grey);
+}
+
+.SemanticAttribute-name {
+  background-color: var(--color-grey-ltr);
+}
+
+.SemanticAttribute-name,
+.SemanticAttribute-value,
+.SemanticAttribute-qualifier,
+.SemanticRelation-name,
+.SemanticRelation-object,
+.SemanticRelation-value {
+  flex-basis: 30%;
+  flex-grow: grow;
+}
+
+.SemanticAttribute-value {
+  flex-basis: 50%;
+}
+
+.SemanticAttribute-qualifier {
+  flex-basis: 20%;
+}
+
+.Hierarchy-item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.Hierarchy-item-icon {
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+.Hierarchy-item-icon:before {
+  content: "►";
+  display: inline-block;
+  width: 16px;
+  color: var(--color-grey);
+}
+
+.Hierarchy-item-icon[data-state~="expanded"]:before {
+  content: "▼";
+}
+
+.Hierarchy-item-icon[data-state~="empty"]:before {
+  content: " ";
+}
+
+.Hierarchy-item-icon:after {
+  content: "@";
+  display: inline-block;
+  width: 16px;
+}
+
+.Hierarchy-item-label {
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.Hierarchy-item:hover .Hierarchy-item-label {
+  background-color: var(--color-grey-lt);
+}
+
+.Hierarchy-item[data-state~="selected"] .Hierarchy-item-label {
+  font-weight: bold;
 }

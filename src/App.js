@@ -8,6 +8,7 @@ import {
   withNavigationViewController
 } from "@atlaskit/navigation-next";
 import EditorPage from "./pages/EditorPage";
+import DomainPage, { DomainView } from "./pages/DomainPage";
 import CataloguePage from "./pages/CataloguePage";
 
 import "./styles.css";
@@ -58,24 +59,30 @@ const productHomeView = {
 			  </div>
 			);
 		  },
-
-		  id: "product-wordmark"
-		}
-	  ]
-	},
-	{
-	  type: "MenuSection",
-	  id: "product/home:menu",
-	  items: [
-		{
-		  type: "InlineComponent",
-		  component: LinkItem,
-		  id: "datasets",
-		  text: "Datasets",
-		  to: "/datasets"
-		}
-	  ]
-	}
+          id: "product-wordmark"
+        }
+      ]
+    },
+    {
+      type: "MenuSection",
+      id: "product/home:menu",
+      items: [
+        {
+          type: "InlineComponent",
+          component: LinkItem,
+          id: "datasets",
+          text: "Datasets",
+          to: "/datasets"
+        },
+        {
+          type: "InlineComponent",
+          component: LinkItem,
+          id: "domain",
+          text: "Domain",
+          to: "/domain"
+        }
+      ]
+    }
   ]
 };
 
@@ -99,25 +106,37 @@ const EditorRouteBase = props => {
 };
 const EditorRoute = withNavigationViewController(EditorRouteBase);
 
+const DomainRouteBase = props => {
+  const navigationViewController = props.navigationViewController;
+  useEffect(() => {
+    navigationViewController.setView(DomainView.id);
+  }, [navigationViewController]);
+
+  return <DomainPage concept={props.match.params.concept} />;
+};
+const DomainRoute = withNavigationViewController(DomainRouteBase);
+
 const App = props => {
   const navigationViewController = props.navigationViewController;
   useEffect(
-	_ => {
-	  navigationViewController.addView(productHomeView);
-	},
-	[navigationViewController]
+    _ => {
+      navigationViewController.addView(productHomeView);
+      navigationViewController.addView(DomainView);
+    },
+    [navigationViewController]
   );
 
   return (
-	<LayoutManagerWithViewController globalNavigation={AppGlobalNavigation}>
-	  <Switch>
-		<Route
-		  path={["/datasets/:prefix", "/datasets"]}
-		  component={CatalogueRoute}
-		/>
-		<Route path="/editor/:datasetId" component={EditorRoute} />
-	  </Switch>
-	</LayoutManagerWithViewController>
+    <LayoutManagerWithViewController globalNavigation={AppGlobalNavigation}>
+      <Switch>
+        <Route
+          path={["/datasets/:prefix", "/datasets"]}
+          component={CatalogueRoute}
+        />
+        <Route path={["/domain/:concept", "/domain"]} component={DomainRoute} />
+        <Route path="/editor/:datasetId" component={EditorRoute} />
+      </Switch>
+    </LayoutManagerWithViewController>
   );
 };
 const AppWithNavigationViewController = withNavigationViewController(App);
