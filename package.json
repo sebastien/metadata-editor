@@ -23,6 +23,7 @@
     "@atlaskit/tree": "7.1.2",
     "hjson": "3.2.1",
     "react": "16.13.0",
+    "sprintf-js": "1.1.2",
     "react-beautiful": "2.4.0",
     "react-beautiful-dnd": "13.0.0",
     "react-datasheet": "1.4.1",
