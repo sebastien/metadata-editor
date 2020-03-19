@@ -21,6 +21,7 @@
     "@atlaskit/textarea": "2.2.4",
     "@atlaskit/textfield": "3.1.7",
     "@atlaskit/tree": "7.1.2",
+    "sprintf-js": "1.1.2",
     "hjson": "3.2.1",
     "react": "16.13.0",
     "react-beautiful": "2.4.0",
