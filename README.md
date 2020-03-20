@@ -12,6 +12,6 @@
                           \___  >____ | |__||__|  \____/|__|
                               \/     \/
 ```
-
 An configurable interactive editor to edit metadata, built using React and
 AtlasKit.
+

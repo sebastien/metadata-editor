@@ -7,7 +7,7 @@ import TableTree, {
   Cell
 } from "@atlaskit/table-tree";
 import { api } from "../../api";
-import {sprintf} from "sprintf-js";
+import sprintf from "sprintf-js";
 import {
   items,
   nth,
