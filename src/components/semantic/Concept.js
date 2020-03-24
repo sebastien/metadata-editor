@@ -97,6 +97,11 @@ export default function Concept (props) {
       const { relation, value, qualifier } = _ || {}
       concept.addAttribute(relation, value, qualifier)
     })
+    concept.clearRelations();
+    (data.relations || []).forEach((_, i) => {
+      const { relation, value, qualifier } = _ || {}
+      concept.addRelation(relation, value, qualifier)
+    })
     setValue(concept.toJSON())
   }
 

@@ -266,6 +266,18 @@ export class Semantic {
     removeAttribute(attribute, qualifier) {
         error("Not implemented");
     }
+    clearRelations(relation, qualifier) {
+        const a = this.store.ensureRelation(relation, true);
+        this.relations = this.relations.filter(
+            _ =>
+                !(
+                    (a === undefined || _.relation === a) &&
+                    (qualifier === undefined || _.qualifier === qualifier)
+                )
+        );
+        return this.relations;
+    }
+
     addRelation(verb, object, value) {
         const r = this.store.register(
             new Quadruple(this, this.store.ensureRelation(verb), object, value)
