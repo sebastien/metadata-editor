@@ -168,7 +168,7 @@ export default function Field (props) {
       return (
         <div className='Field' data-state='readwrite' data-type={type}>
           {label ? <div className='Field-label'>{label}</div> : null}
-          {FieldEditorFactory(props, defaultValue)({ ...props, onChange: onChange })}
+          {FieldEditorFactory(props, defaultValue)({ ...props, value: defaultValue, onChange: onChange })}
         </div>
       )
     } else {
