@@ -1,6 +1,5 @@
 import { swallow, list, first, bool } from "../utils/functional";
 import { assert, error } from "../utils/assert";
-import { Journaled } from "../utils/delta";
 
 // TODO: We should probably do a Managed class
 // TODO: This module should be reformatted and include proper documentation.
@@ -62,7 +61,7 @@ export class Quadruple {
 
 export class QuadStore {
     constructor() {
-        this.quadruples = new JournalledList();
+        this.quadruples = [];
     }
     register(quad) {
         this.quadruples.push(quad);
