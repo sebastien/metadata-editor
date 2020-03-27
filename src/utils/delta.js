@@ -1,4 +1,4 @@
-import { assert } from "./assert";
+import { assert, error } from "./assert";
 
 export class Operation {
     constructor(target, key, value, previous) {
@@ -11,6 +11,7 @@ export class Operation {
 }
 
 export class Set extends Operation {}
+export class Insert extends Operation {}
 export class Remove extends Operation {
     constructor(target, key, previous) {
         super(target, key, undefined, previous);
@@ -96,45 +97,36 @@ class Journaled extends Topic {
         this.journal = undefined;
         this.revision = 0;
     }
-
-    map(functor) {
-        error("NotImplemented");
-    }
-    filter(functor) {
-        error("NotImplemented");
-    }
-    reduce(functor, initial) {
-        error("NotImplemented");
-    }
     touch() {
         this.revision += 1;
-        return self;
+        return this;
     }
     attach(parent, key) {
-        this.parent = parent;
-        this.journal = parent.journal;
-        this.key = key;
+        if (parent !== undefined) {
+            this.parent = parent;
+        }
+        this.journal = this.parent.journal;
+        if (key !== undefined) {
+            this.key = key;
+        }
+        return this;
     }
-
+    detach() {
+        const key = this.key;
+        const parent = this.parent;
+        this.key = undefined;
+        this.parent = undefined;
+        this.journal = undefined;
+        return this;
+    }
     dump() {
-        return this._values.map(_ => (_ instanceof Journaled ? _.dump() : _));
-    }
-    load(value, meta) {
         error("NotImplemented");
     }
     dumpMeta() {
-        return {
-            revision: this.revision,
-            key: this.key,
-            parent: this.parent ? this.parent.path : null,
-            children: this.reduce(
-                this.values,
-                (r, v, i) => {
-                    r[i] = v instanceof Journaled ? v.dumpMeta() : null;
-                },
-                {}
-            )
-        };
+        error("NotImplemented");
+    }
+    load(value, meta) {
+        error("NotImplemented");
     }
     loadMeta(value) {
         error("NotImplemented");
@@ -163,21 +155,24 @@ export class JournaledList {
         return -1;
     }
     // @group Transforms
+    forEach(functor) {
+        return this._values.forEach(functor);
+    }
     map(functor) {
-        return new JournalledList().init(this._values.map(functor));
+        return new JournaledList().init(this._values.map(functor));
     }
     filter(functor) {
-        return new JournalledList().init(this._values.filter(filter));
+        return new JournaledList().init(this._values.filter(functor));
     }
     reduce(functor, initial) {
-        return new JournalledList().init(this._values.reduce(reduce, initial));
+        return new JournaledList().init(this._values.reduce(functor, initial));
     }
 
-    // @group Journalled operations
+    // @group Journaled operations
     //
     clear() {
         if (this.journal && this.length > 0) {
-            journal.add(new Clear(this.touch(), this.dump()));
+            this.journal.add(new Clear(this.touch(), this.dump()));
         }
         this._values = [];
         return this;
@@ -190,34 +185,37 @@ export class JournaledList {
                     0)
         ) {
             this._values = values.map(_ => _);
-            journal.add(new Init(this.touch(), this._values, this.dump()));
+            this.journal.add(new Init(this.touch(), this._values, this.dump()));
         }
         return this;
     }
     set(index, value) {
-        const i = _ensureIndex(index);
+        const i = this._ensureIndex(index);
         if (this._values[i] !== value) {
             if (this.journal) {
-                journal.add(new Set(this.touch(), i, value));
+                this.journal.add(new Set(this.touch(), i, value));
             }
         }
         return value;
     }
+    push(value) {
+        return this.add(value);
+    }
     add(value) {
-        return set(this.length, value);
+        return this.set(this.length, value);
     }
     insert(index, value) {
-        const i = _ensureIndex(index);
+        const i = this._ensureIndex(index);
         this._values.split(i, 0, value);
         if (this.journal) {
-            journal.add(new Insert(this.touch(), i, value));
+            this.journal.add(new Insert(this.touch(), i, value));
         }
         return this;
     }
     remove(value) {
-        const i = this.indedOf(value);
+        const i = this.indexOf(value);
         if (i !== -1) {
-            this.removeAt(index);
+            this.removeAt(i);
             return true;
         } else {
             return false;
@@ -229,7 +227,7 @@ export class JournaledList {
             const previous = this._values[i];
             this._values.splice(i, 1);
             if (this.journal) {
-                journal.add(new Remove(this.touch(), i, previous));
+                this.journal.add(new Remove(this.touch(), i, previous));
             }
             return previous;
         } else {
@@ -242,6 +240,21 @@ export class JournaledList {
     dump() {
         return this._values.map(_ => (_ instanceof Journaled ? _.dump() : _));
     }
+    dumpMeta() {
+        return {
+            revision: this.revision,
+            key: this.key,
+            parent: this.parent ? this.parent.path : null,
+            children: this.reduce(
+                this.values,
+                (r, v, i) => {
+                    r[i] = v instanceof Journaled ? v.dumpMeta() : null;
+                },
+                {}
+            )
+        };
+    }
+
     _ensureIndex(index) {
         const i = index < 0 ? this._values.length + index : index;
         while (this._values.length < i) {
@@ -271,18 +284,25 @@ export class JournaledMap {
     }
 
     // @group Transforms
+    forEach(functor) {
+        const l = this._values;
+        for (const k in l) {
+            functor(l[k], k);
+        }
+        return this;
+    }
     map(functor) {
-        return new JournalledList().init(
+        return new JournaledList().init(
             Object.keys(this._values).map(_ => functor(this._values[_], _))
         );
     }
     filter(functor) {
-        return new JournalledList().init(
+        return new JournaledList().init(
             Object.keys(this._values).filter(_ => functor(this._values[_], _))
         );
     }
     reduce(functor, initial) {
-        return new JournalledList().init(
+        return new JournaledList().init(
             Object.keys(this._values).reduce(
                 (r, _) => functor(r, this._values[_], _),
                 initial
@@ -291,7 +311,7 @@ export class JournaledMap {
     }
     clear() {
         if (this.journal && this.length > 0) {
-            journal.add(new Clear(this.touch(), this.dump()));
+            this.journal.add(new Clear(this.touch(), this.dump()));
         }
         this._values = {};
         return this;
@@ -304,12 +324,12 @@ export class JournaledMap {
                     0)
         ) {
             this._values = values.map(_ => _);
-            journal.add(new Init(this.touch(), this._values, this.dump()));
+            this.journal.add(new Init(this.touch(), this._values, this.dump()));
         }
         return this;
     }
     get(key) {
-        return this_values[key];
+        return this._values[key];
     }
     has(key) {
         return this._values[key] !== undefined;
@@ -317,7 +337,7 @@ export class JournaledMap {
     set(key, value) {
         if (this._values[key] !== value) {
             if (this.journal) {
-                journal.add(new Set(this.touch(), key, value));
+                this.journal.add(new Set(this.touch(), key, value));
             }
         }
         return value;
@@ -335,7 +355,7 @@ export class JournaledMap {
         const previous = this._values[key];
         if (this.journal && previous !== undefined) {
             delete this._values[key];
-            journal.add(new Remove(this.touch(), i, previous));
+            this.journal.add(new Remove(this.touch(), key, previous));
         }
         return previous;
     }
