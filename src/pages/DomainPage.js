@@ -6,7 +6,6 @@ import InlineEdit from "@atlaskit/inline-edit";
 import TextField from "@atlaskit/textfield";
 import Hierarchy from "../components/semantic/Hierarchy";
 import Concept from "../components/semantic/Concept";
-import { STORE } from "../model/semantic";
 
 export const DomainView = {
     id: "domain/home",
@@ -30,7 +29,9 @@ export const DomainView = {
 };
 
 export default function DomainPage(props) {
-    const concept = props.concept ? STORE.ensureConcept(props.concept) : null;
+    // FIXME:
+    // const concept = props.concept ? STORE.ensureConcept(props.concept) : null;
+    const concept = props.concept ? {} : null;
     const breadcrumbs = (
         <BreadcrumbsStateless>
             <BreadcrumbsItem text="Domain" href="#/domain" key="0" />

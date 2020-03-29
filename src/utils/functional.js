@@ -20,6 +20,19 @@ export function bool(value) {
         return value ? true : false;
     }
 }
+export function copy(value) {
+    if (typeof value === "object") {
+        if (value instanceof Array) {
+            return [].concat(value);
+        } else {
+            const r = {};
+            Object.assign(r, value);
+            return r;
+        }
+    } else {
+        return value;
+    }
+}
 
 export function firstdef(value) {
     switch (arguments.length) {

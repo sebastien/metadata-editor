@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Editor from '../Editor'
-import { SKOS, RDFS, STORE } from '../../model/semantic'
+import { SKOS, RDFS } from '../../model/ontologies'
 
 // TODO: We could capture the project/unproject as part of the schema as well.
 /* We define a configuration for the structure editor, which makes it
@@ -120,7 +120,8 @@ const unproject = (concept, data) => {
 }
 
 export default function Concept (props) {
-  const concept = props.concept ? STORE.ensureConcept(props.concept) : null
+  // TODO: Borrow from store
+  const concept = props.concept ? {} : null
   const [value, setValue] = useState({})
   useEffect(() => {
     setValue(project(concept))
