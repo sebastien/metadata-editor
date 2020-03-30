@@ -1,76 +1,76 @@
 {
-  "definition": {
-    "type": "section",
-    "label": "Description",
-    "fields": {
-      "title": { "type": "label" },
-      "description": { "type": "text" },
-      "visibilty": {
-        "type": "select",
-        "options": [
-          { "label": "public", "value": "a" },
-          { "label": "private", "value": "b" },
-          { "label": "confidential", "value": "c" }
-        ]
-      }
-    }
-  },
-  "preview": {
-    "type": "section",
-    "label": "Preview",
-    "fields": {
-      "preview": {
-        "type": "table-preview"
-      }
-    }
-  },
-  "structure": {
-    "type": "section",
-    "label": "Structure",
-    "fields": {
-      "fields": {
-        "type": "collection",
-        "itemLabel": "field",
-        "content": {
-          "type": "composite",
-          "fields": {
+    "definition": {
+        "type": "section",
+        "label": "Description",
+        "fields": {
+            "title": { "type": "label" },
             "description": { "type": "text" },
-            "preview": {
-              "type": "distribution-preview",
-              "select": "dataset/{dataset}/dimension/{this.key}"
+            "visibilty": {
+                "type": "select",
+                "options": [
+                    { "label": "public", "value": "a" },
+                    { "label": "private", "value": "b" },
+                    { "label": "confidential", "value": "c" }
+                ]
             }
-          }
         }
-      }
+    },
+    "preview": {
+        "type": "section",
+        "label": "Preview",
+        "fields": {
+            "preview": {
+                "type": "table-preview"
+            }
+        }
+    },
+    "structure": {
+        "type": "section",
+        "label": "Structure",
+        "fields": {
+            "fields": {
+                "type": "collection",
+                "itemLabel": "field",
+                "content": {
+                    "type": "composite",
+                    "fields": {
+                        "description": { "type": "text" },
+                        "preview": {
+                            "type": "distribution-preview",
+                            "select": "dataset/{dataset}/dimension/{this.key}"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "management": {
+        "type": "section",
+        "label": "Data management",
+        "fields": {
+            "lifecycle": {
+                "type": "select",
+                "options": [{ "label": "managed" }, { "label": "unmanaged" }]
+            },
+            "workflow": {
+                "type": "select",
+                "options": [
+                    { "label": "A", "value": "a" },
+                    { "label": "B", "value": "b" },
+                    { "label": "C", "value": "c" },
+                    { "label": "D", "value": "d" }
+                ]
+            },
+            "dataflow": {
+                "type": "select",
+                "multiple": true,
+                "options": [
+                    { "label": "A", "value": "a" },
+                    { "label": "B", "value": "b" },
+                    { "label": "C", "value": "c" },
+                    { "label": "D", "value": "d" }
+                ]
+            }
+        }
     }
-  },
-  "management": {
-    "type": "section",
-    "label": "Data management",
-    "fields": {
-      "lifecycle": {
-        "type": "select",
-        "options": [{ "label": "managed" }, { "label": "unmanaged" }]
-      },
-      "workflow": {
-        "type": "select",
-        "options": [
-          { "label": "A", "value": "a" },
-          { "label": "B", "value": "b" },
-          { "label": "C", "value": "c" },
-          { "label": "D", "value": "d" }
-        ]
-      },
-      "dataflow": {
-        "type": "select",
-        "multiple": true,
-        "options": [
-          { "label": "A", "value": "a" },
-          { "label": "B", "value": "b" },
-          { "label": "C", "value": "c" },
-          { "label": "D", "value": "d" }
-        ]
-      }
-    }
-  }
 }

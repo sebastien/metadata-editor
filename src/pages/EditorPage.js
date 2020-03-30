@@ -107,38 +107,9 @@ export default props => {
         </ButtonGroup>
     );
 
-    // FIXME: Hardcoding!
-    const content = (
-        <div className="EditorPage-links">
-            <div>
-                <Tag text="Data" color="yellow" />
-                <Tag
-                    text="CSV"
-                    color="standard"
-                    href={`//appdev62/dataset/${datasetId}/preview/:data:csv`}
-                />
-                <Tag
-                    text="JSON"
-                    color="standard"
-                    href={`//appdev62/dataset/${datasetId}/preview/:data:json`}
-                />
-                <Tag text="Metadata" color="yellow" />
-                <Tag
-                    text="JSON"
-                    color="standard"
-                    href={`//appdev62/dataset/${datasetId}:meta:json`}
-                />
-            </div>
-        </div>
-    );
-
     return (
         <div className="EditorPage">
-            <PageHeader
-                breadcrumbs={breadcrumbs}
-                actions={actions}
-                bottomBar={content}
-            >
+            <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
                 Metadata for {datasetParent}.{datasetName}
             </PageHeader>
             <div className="EditorPage-editor">
