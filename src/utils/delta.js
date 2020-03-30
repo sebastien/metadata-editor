@@ -144,20 +144,21 @@ export class Journaled extends Topic {
   }
 }
 
-export class JournaledList {
+export class JournaledList extends Journaled {
   constructor () {
-    this._values = []
+    super()
+    this.values = []
   }
 
   get length () {
-    return this._values.length
+    return this.values.length
   }
 
   // @group Query
   indexOf (value) {
     var i = 0
-    const v = this._values
-    const n = this._values.length
+    const v = this.values
+    const n = this.values.length
     while (i < n) {
       if (v[i] === value) {
         return i
@@ -170,19 +171,19 @@ export class JournaledList {
 
   // @group Transforms
   forEach (functor) {
-    return this._values.forEach(functor)
+    return this.values.forEach(functor)
   }
 
   map (functor) {
-    return new JournaledList().init(this._values.map(functor))
+    return new JournaledList().init(this.values.map(functor))
   }
 
   filter (functor) {
-    return new JournaledList().init(this._values.filter(functor))
+    return new JournaledList().init(this.values.filter(functor))
   }
 
   reduce (functor, initial) {
-    return new JournaledList().init(this._values.reduce(functor, initial))
+    return new JournaledList().init(this.values.reduce(functor, initial))
   }
 
   // @group Journaled operations
@@ -191,7 +192,7 @@ export class JournaledList {
     if (this.journal && this.length > 0) {
       this.journal.add(new Clear(this.touch(), this.dump()))
     }
-    this._values = []
+    this.values = []
     return this
   }
 
@@ -199,18 +200,18 @@ export class JournaledList {
     if (
       this.journal &&
             (values.length !== this.length ||
-                values.filter((w, i) => this._values[i] !== values[i]).length >
+                values.filter((w, i) => this.values[i] !== values[i]).length >
                     0)
     ) {
-      this._values = values.map(_ => _)
-      this.journal.add(new Init(this.touch(), this._values, this.dump()))
+      this.values = values.map(_ => _)
+      this.journal.add(new Init(this.touch(), this.values, this.dump()))
     }
     return this
   }
 
   set (index, value) {
     const i = this._ensureIndex(index)
-    if (this._values[i] !== value) {
+    if (this.values[i] !== value) {
       if (this.journal) {
         this.journal.add(new Set(this.touch(), i, value))
       }
@@ -228,7 +229,7 @@ export class JournaledList {
 
   insert (index, value) {
     const i = this._ensureIndex(index)
-    this._values.split(i, 0, value)
+    this.values.split(i, 0, value)
     if (this.journal) {
       this.journal.add(new Insert(this.touch(), i, value))
     }
@@ -246,10 +247,10 @@ export class JournaledList {
   }
 
   removeAt (index) {
-    const i = index < 0 ? this._values.length + index : index
-    if (i < this._values.length) {
-      const previous = this._values[i]
-      this._values.splice(i, 1)
+    const i = index < 0 ? this.values.length + index : index
+    if (i < this.values.length) {
+      const previous = this.values[i]
+      this.values.splice(i, 1)
       if (this.journal) {
         this.journal.add(new Remove(this.touch(), i, previous))
       }
@@ -264,7 +265,7 @@ export class JournaledList {
   }
 
   dump () {
-    return this._values.map(_ => (_ instanceof Journaled ? _.dump() : _))
+    return this.values.map(_ => (_ instanceof Journaled ? _.dump() : _))
   }
 
   dumpMeta () {
@@ -283,27 +284,32 @@ export class JournaledList {
   }
 
   _ensureIndex (index) {
-    const i = index < 0 ? this._values.length + index : index
-    while (this._values.length < i) {
-      this._values.push(undefined)
+    const i = index < 0 ? this.values.length + index : index
+    while (this.values.length < i) {
+      this.values.push(undefined)
     }
     return i
   }
 }
 
-export class JournaledMap {
+export class JournaledMap extends Journaled {
+  constructor () {
+    super()
+    this.values = []
+  }
+
   get length () {
     var n = 0
     // eslint-disable-next-line
-        for (const _ in this._values) {
+        for (const _ in this.values) {
       n += 1
     }
     return n
   }
 
   keyOf (value) {
-    const v = this._values
-    const n = this._values.length
+    const v = this.values
+    const n = this.values.length
     for (const k in n) {
       if (value === v[k]) {
         return k
@@ -314,7 +320,7 @@ export class JournaledMap {
 
   // @group Transforms
   forEach (functor) {
-    const l = this._values
+    const l = this.values
     for (const k in l) {
       functor(l[k], k)
     }
@@ -323,20 +329,20 @@ export class JournaledMap {
 
   map (functor) {
     return new JournaledList().init(
-      Object.keys(this._values).map(_ => functor(this._values[_], _))
+      Object.keys(this.values).map(_ => functor(this.values[_], _))
     )
   }
 
   filter (functor) {
     return new JournaledList().init(
-      Object.keys(this._values).filter(_ => functor(this._values[_], _))
+      Object.keys(this.values).filter(_ => functor(this.values[_], _))
     )
   }
 
   reduce (functor, initial) {
     return new JournaledList().init(
-      Object.keys(this._values).reduce(
-        (r, _) => functor(r, this._values[_], _),
+      Object.keys(this.values).reduce(
+        (r, _) => functor(r, this.values[_], _),
         initial
       )
     )
@@ -346,7 +352,7 @@ export class JournaledMap {
     if (this.journal && this.length > 0) {
       this.journal.add(new Clear(this.touch(), this.dump()))
     }
-    this._values = {}
+    this.values = {}
     return this
   }
 
@@ -354,25 +360,25 @@ export class JournaledMap {
     if (
       this.journal &&
             (values.length !== this.length ||
-                values.filter((w, i) => this._values[i] !== values[i]).length >
+                values.filter((w, i) => this.values[i] !== values[i]).length >
                     0)
     ) {
-      this._values = values.map(_ => _)
-      this.journal.add(new Init(this.touch(), this._values, this.dump()))
+      this.values = values.map(_ => _)
+      this.journal.add(new Init(this.touch(), this.values, this.dump()))
     }
     return this
   }
 
   get (key) {
-    return this._values[key]
+    return this.values[key]
   }
 
   has (key) {
-    return this._values[key] !== undefined
+    return this.values[key] !== undefined
   }
 
   set (key, value) {
-    if (this._values[key] !== value) {
+    if (this.values[key] !== value) {
       if (this.journal) {
         this.journal.add(new Set(this.touch(), key, value))
       }
@@ -391,9 +397,9 @@ export class JournaledMap {
   }
 
   removeAt (key) {
-    const previous = this._values[key]
+    const previous = this.values[key]
     if (this.journal && previous !== undefined) {
-      delete this._values[key]
+      delete this.values[key]
       this.journal.add(new Remove(this.touch(), key, previous))
     }
     return previous

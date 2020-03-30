@@ -1,9 +1,9 @@
 import { copy } from '../utils/functional.js'
-import { NodeView } from './graph'
+import { Node } from './graph'
 
 const CANONICAL = '*'
 
-class Semantic extends NodeView {
+class Semantic extends Node {
   constructor (type, id) {
     super()
     this.type = type
@@ -26,6 +26,11 @@ class Semantic extends NodeView {
 
   setDefinition (value, qualifier) {
     return this._setI18NAttribute('definition', value, qualifier)
+  }
+
+  addRelation (verb, object, value) {
+    console.log('ADD RELATION', [verb, object, value])
+    return this.addEdge(verb, object, value)
   }
 
   _setI18NAttribute (name, qualifier, value) {

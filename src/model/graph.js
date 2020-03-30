@@ -1,3 +1,4 @@
+// @title Graph module
 import { Journaled, JournaledList, JournaledMap } from '../utils/delta'
 
 var COUNTER = 0
@@ -5,7 +6,10 @@ var COUNTER = 0
 // node view that will do it.
 
 class Element extends Journaled {
+// @doc
+
   constructor (type) {
+    // @param type the type of the argument
     super()
     this.id = COUNTER++
     this.type = type
@@ -13,6 +17,8 @@ class Element extends Journaled {
   }
 
   attach (parent, key) {
+    // @param parent the parent key
+    // @param parent the parent key
     super.attach(parent, key)
     this.attributes.attach(this, 'attributes')
     return this
