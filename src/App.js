@@ -7,8 +7,8 @@ import {
   NavigationProvider,
   withNavigationViewController
 } from '@atlaskit/navigation-next'
-import EditorPage from './pages/EditorPage'
 import DomainPage, { DomainView } from './pages/DomainPage'
+import DatasetListPage from './pages/DatasetListPage'
 import DatasetPage from './pages/DatasetPage'
 
 import './styles.css'
@@ -35,7 +35,7 @@ const LinkItem = ({ components: { Item }, to, ...props }) => {
   )
 }
 
-const productHomeView = {
+const ProductHomeView = {
   id: 'product/home',
   type: 'product',
   getItems: () => [
@@ -86,25 +86,29 @@ const productHomeView = {
   ]
 }
 
+// NOTE: This begs for abastraction, but the useEffect prevents from
+// using a factory function, as we'd get the following error:
+//  React Hook "useEffect" is called in function "routeBase" which is
+//  neither a React function component or a custom React Hook function  react-hooks/rules-of-hooks
 const DatasetsRouteBase = props => {
   const navigationViewController = props.navigationViewController
   useEffect(() => {
-    navigationViewController.setView(productHomeView.id)
+    navigationViewController.setView(ProductHomeView.id)
   }, [navigationViewController])
 
-  return <DatasetPage prefix={props.match.params.prefix} />
+  return <DatasetListPage prefix={props.match.params.prefix} />
 }
 const DatasetsRoute = withNavigationViewController(DatasetsRouteBase)
 
-const EditorRouteBase = props => {
+const DatasetRouteBase = props => {
   const navigationViewController = props.navigationViewController
   useEffect(() => {
-    navigationViewController.setView(productHomeView.id)
+    navigationViewController.setView(ProductHomeView.id)
   }, [navigationViewController])
 
-  return <EditorPage dataset={props.match.params.datasetId} />
+  return <DatasetPage dataset={props.match.params.dataset} />
 }
-const EditorRoute = withNavigationViewController(EditorRouteBase)
+const DatasetRoute = withNavigationViewController(DatasetRouteBase)
 
 const DomainRouteBase = props => {
   const navigationViewController = props.navigationViewController
@@ -120,7 +124,7 @@ const App = props => {
   const navigationViewController = props.navigationViewController
   useEffect(
     _ => {
-      navigationViewController.addView(productHomeView)
+      navigationViewController.addView(ProductHomeView)
       navigationViewController.addView(DomainView)
     },
     [navigationViewController]
@@ -134,10 +138,13 @@ const App = props => {
           component={DatasetsRoute}
         />
         <Route
+          path={['/dataset/:dataset']}
+          component={DatasetRoute}
+        />
+        <Route
           path={['/domain/:concept', '/domain']}
           component={DomainRoute}
         />
-        <Route path='/editor/:datasetId' component={EditorRoute} />
       </Switch>
     </LayoutManagerWithViewController>
   )

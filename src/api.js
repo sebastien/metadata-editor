@@ -38,6 +38,17 @@ class API {
     saveDatasetMetaData(dataset, data) {
         return this.putJSON(`dataset/${dataset}:meta`, data);
     }
+
+    linkToDatasets(prefix) {
+        return prefix ? `/datasets/${prefix}` : "datasets";
+    }
+
+    linkToDataset(name) {
+        return `/dataset/${name}`;
+    }
+    linkToDatasetSchema() {
+        return "schema.json";
+    }
 }
 
 export const api = new API("https://localhost:8003/api/0.0/");

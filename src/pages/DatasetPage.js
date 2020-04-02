@@ -1,63 +1,128 @@
 import React, { useEffect, useState } from "react";
-import PageHeader from "@atlaskit/page-header";
-import { Link } from "react-router-dom";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
+import Button, { ButtonGroup } from "@atlaskit/button";
+import PageHeader from "@atlaskit/page-header";
+import Tag from "@atlaskit/tag";
+import Editor from "../components/Editor";
+
 import { api } from "../api";
 
-const DatasetItem = props => {
-  return (
-    <li className="DatasetItem">
-      <Link className="DatasetItem-link" to={"/editor/" + props.name}>
-        <div className="DatasetItem-label">{props.name}</div>
-        <div className="DatasetItem-description">{props.description}</div>
-      </Link>
-    </li>
-  );
+const save = (id, value) => {
+    if (value) {
+        api.saveDatasetMetaData(id, value);
+    }
 };
 
 export default props => {
-  const [datasets, setDatasets] = useState([]);
-  const prefixRe = props.prefix ? new RegExp("^" + props.prefix) : null;
-  useEffect(() => {
-    // This normalizes the datasets from the data format into the format
-    // required by the view.
-    api.listDatasets().then(_ =>
-      setDatasets(
-        Object.entries(_ || {}).map(kv => {
-          const [k, v] = kv;
-          return {
-            key: k,
-            name: (v && v.definition && v.definition.identification) || k,
-            description: v && v.definition && v.definition.description
-          };
-        })
-      )
+    // @input dataset
+    const datasetId = props.dataset || null;
+    const [isReadOnly, setReadOnly] = useState(true);
+    const [value, setValue] = useState(undefined);
+    const [schema, setSchema] = useState({});
+    const [types, setTypes] = useState({});
+
+    const [datasetValue, setDatasetValue] = useState(null);
+
+    const [datasetParent, datasetName] = (_ => [
+        _.slice(0, -1).join("."),
+        _[_.length - 1]
+    ])((datasetId || "").split("."));
+
+    const schema_url = props.schema || api.linkToDatasetSchema();
+    useEffect(() => {
+        async function fetchData() {
+            fetch(schema_url)
+                .then(_ => {
+                    return _.json();
+                })
+                .then(_ => {
+                    // We extract the types from the schema, as they can be used
+                    // later on.
+                    const [schema, types] = Object.entries(_)
+                        .reduce(
+                            (ab, kv) => {
+                                (kv[0].startsWith("#") ? ab[1] : ab[0]).push(
+                                    kv
+                                );
+                                return ab;
+                            },
+                            [[], []]
+                        )
+                        .map(_ => Object.fromEntries(_));
+                    setTypes(types);
+                    setSchema(schema);
+                });
+        }
+        fetchData();
+    }, [schema_url]);
+
+    const breadcrumbs = (
+        <BreadcrumbsStateless>
+            <BreadcrumbsItem text="datasets" href="#/datasets" key="datasets" />
+            <BreadcrumbsItem
+                text={datasetParent}
+                href={`#${api.linkToDatasets(datasetParent)}`}
+                key="parent"
+            />
+        </BreadcrumbsStateless>
     );
-  }, []);
 
-  const breadcrumbs = props.prefix ? (
-    <BreadcrumbsStateless>
-      <BreadcrumbsItem text="All datasets" href="#/catalogue" key="0" />
-      <BreadcrumbsItem
-        text={props.prefix}
-        href={`#/catalogue/${props.prefix}`}
-        key="1"
-      />
-    </BreadcrumbsStateless>
-  ) : null;
+    useEffect(
+        _ => {
+            datasetId
+                ? api.getDatasetMetaData(datasetId).then(setDatasetValue)
+                : setDatasetValue({});
+        },
+        [datasetId]
+    );
+    const actions = isReadOnly ? (
+        <ButtonGroup>
+            <Button
+                appearance="primary"
+                onClick={_ => {
+                    setReadOnly(false);
+                }}
+            >
+                Edit
+            </Button>
+        </ButtonGroup>
+    ) : (
+        <ButtonGroup>
+            <Button
+                appearance="primary"
+                onClick={_ => {
+                    save(datasetId, value);
+                    setReadOnly(true);
+                }}
+            >
+                Save
+            </Button>
+            <Button
+                appearance="subtle"
+                onClick={_ => {
+                    setReadOnly(true);
+                }}
+            >
+                Cancel
+            </Button>
+        </ButtonGroup>
+    );
 
-  return (
-    <div className="CataloguePage">
-      <PageHeader breadcrumbs={breadcrumbs}>Data Catalogue</PageHeader>
-      <ul className="DatasetList">
-        {(datasets || []).map((d, i) =>
-          !props.prefix || prefixRe.test(d.name) ? (
-            <DatasetItem {...d} key={d.key} />
-          ) : (
-            undefined
-          )
-        )}
-      </ul>
-    </div>
-  );
+    return (
+        <div className="DatasetPage">
+            <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
+                {datasetParent}.{datasetName}
+            </PageHeader>
+            <div className="DatasetPage-editor">
+                <Editor
+                    schema={schema}
+                    types={types}
+                    path={datasetId}
+                    defaultValue={datasetValue}
+                    isReadOnly={isReadOnly}
+                    onChange={_ => setValue(_)}
+                />
+            </div>
+        </div>
+    );
 };

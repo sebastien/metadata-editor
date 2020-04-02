@@ -3,16 +3,7 @@
         "type": "section",
         "label": "Description",
         "fields": {
-            "title": { "type": "label" },
-            "description": { "type": "text" },
-            "visibilty": {
-                "type": "select",
-                "options": [
-                    { "label": "public", "value": "a" },
-                    { "label": "private", "value": "b" },
-                    { "label": "confidential", "value": "c" }
-                ]
-            }
+            "description": { "type": "text", "label": "Overview" }
         }
     },
     "preview": {
@@ -26,7 +17,7 @@
     },
     "structure": {
         "type": "section",
-        "label": "Structure",
+        "label": "Fields",
         "fields": {
             "fields": {
                 "type": "collection",
@@ -34,42 +25,15 @@
                 "content": {
                     "type": "composite",
                     "fields": {
-                        "description": { "type": "text" },
+                        "description": {
+                            "type": "text"
+                        },
                         "preview": {
                             "type": "distribution-preview",
                             "select": "dataset/{dataset}/dimension/{this.key}"
                         }
                     }
                 }
-            }
-        }
-    },
-    "management": {
-        "type": "section",
-        "label": "Data management",
-        "fields": {
-            "lifecycle": {
-                "type": "select",
-                "options": [{ "label": "managed" }, { "label": "unmanaged" }]
-            },
-            "workflow": {
-                "type": "select",
-                "options": [
-                    { "label": "A", "value": "a" },
-                    { "label": "B", "value": "b" },
-                    { "label": "C", "value": "c" },
-                    { "label": "D", "value": "d" }
-                ]
-            },
-            "dataflow": {
-                "type": "select",
-                "multiple": true,
-                "options": [
-                    { "label": "A", "value": "a" },
-                    { "label": "B", "value": "b" },
-                    { "label": "C", "value": "c" },
-                    { "label": "D", "value": "d" }
-                ]
             }
         }
     }

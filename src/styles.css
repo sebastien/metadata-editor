@@ -26,12 +26,12 @@ body {
 
 .DomainPage,
 .DatasetPage,
-.EditorPage {
+.DatasetListPage {
     padding: 18px;
     padding-top: 0px;
 }
 
-.EditorPage-editor {
+.DatasetPage-editor {
     margin-left: -18px;
     margin-right: -18px;
     padding-top: 18px;
@@ -250,6 +250,7 @@ body {
     column-count: 2;
 }
 
+.DatasetGroup,
 .DatasetItem {
     list-style-type: none;
     padding: 8px;
@@ -257,6 +258,28 @@ body {
     margin-bottom: 8px;
     overflow: ellipsis;
     cursor: pointer;
+}
+
+.DatasetGroup {
+    border-bottom: 1px solid var(--color-grey);
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.DatasetGroup:last-child {
+    border-bottom: 0px solid var(--color-grey);
+}
+
+.DatasetGroup-label {
+    color: var(--color-grey-dk);
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 1.25em;
+    text-decoration: none;
+    padding-left: 8px;
+    display: block;
 }
 
 .DatasetItem:hover {
@@ -278,6 +301,11 @@ body {
     font-weight: normal;
     font-size: 12px;
     color: #6b778c;
+}
+
+.DatasetItem[data-metadata="false"] .DatasetItem-description:before {
+    content: "No metadata available";
+    color: red;
 }
 
 .TablePreview {

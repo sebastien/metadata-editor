@@ -180,6 +180,15 @@ export function merge(value, other) {
     }
 }
 
+export function groupBy(collection, extractor) {
+    return list(collection).reduce((r, v, i) => {
+        const k = extractor(v, i);
+        r[k] = r[k] || [];
+        r[k].push(v);
+        return r;
+    }, {});
+}
+
 export function last(value) {
     return nth(value, -1);
 }
