@@ -18,6 +18,10 @@ body {
     margin: 0px;
 }
 
+.Highlighter-match {
+    background: yellow;
+}
+
 .Page-header-title {
     display: flex;
     flex-wrap: wrap;
@@ -270,6 +274,11 @@ body {
 
 .DatasetGroup:last-child {
     border-bottom: 0px solid var(--color-grey);
+}
+
+.DatasetGroup-list {
+    padding: 0;
+    margin: 0;
 }
 
 .DatasetGroup-label {
