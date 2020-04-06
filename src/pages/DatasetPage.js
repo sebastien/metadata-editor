@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Icons from "../components/Icons";
 import Tabs from "@atlaskit/tabs";
-import PageHeader from "@atlaskit/page-header";
 import Tag from "@atlaskit/tag";
 import Editor from "../components/Editor";
 import TablePreview from "../components/preview/TablePreview";
 
 import { api } from "../api";
 
-const save = (id, value) => {
-    if (value) {
-        api.saveDatasetMetaData(id, value);
-    }
-};
-
 export default props => {
     // @options
-    const datasetId = props.dataset || null;
+    const datasetId = props.match ? props.match.params.dataset : props.dataset;
     const [datasetParent, datasetName] = (_ => [
         _.slice(0, -1).join("."),
         _[_.length - 1]
@@ -31,6 +24,13 @@ export default props => {
     const [types, setTypes] = useState({});
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
     const [datasetValue, setDatasetValue] = useState(null);
+
+    // @action SaveChanges
+    const doSaveChanges = (id, value) => {
+        if (value) {
+            api.saveDatasetMetaData(id, value);
+        }
+    };
 
     // @effect (datasetId) → datasetValue
     // Loads the dataset metadata
@@ -73,17 +73,6 @@ export default props => {
         fetchData();
     }, [schemaURL]);
 
-    const breadcrumbs = (
-        <BreadcrumbsStateless>
-            <BreadcrumbsItem text="datasets" href="#/datasets" key="datasets" />
-            <BreadcrumbsItem
-                text={datasetParent}
-                href={`#${api.linkToDatasets(datasetParent)}`}
-                key="parent"
-            />
-        </BreadcrumbsStateless>
-    );
-
     // @render Page header actions
     const actions = isReadOnly ? (
         <ButtonGroup>
@@ -101,7 +90,7 @@ export default props => {
             <Button
                 appearance="primary"
                 onClick={_ => {
-                    save(datasetId, value);
+                    doSaveChanges(datasetId, value);
                     setReadOnly(true);
                 }}
             >
@@ -136,17 +125,23 @@ export default props => {
     const dataContent = <TablePreview dataset={datasetId} limit={100} />;
 
     return (
-        <div className="DatasetPage">
-            <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
-                {datasetParent}.{datasetName}
-            </PageHeader>
-            <Tabs
-                tabs={[
-                    { label: "Metadata", content: metadataContent },
-                    { label: "Data", content: dataContent }
-                ]}
-                onSelect={(_tab, index) => setSelectedTabIndex(index)}
-            />
+        <div className="DatasetPage ContentPage">
+            <div className="ContentPage-header">
+                <div
+                    className="ContentPage-header-icon"
+                    title="Relational Table"
+                >
+                    {Icons.Dataset}
+                </div>
+                <div className="ContentPage-header-heading">
+                    <h1 className="ContentPage-header-title">{datasetId}</h1>
+                    <h2 className="ContentPage-header-subtitle">
+                        4 columns, 2000 rows
+                    </h2>
+                </div>
+                <div className="ContentPage-header-actions">{actions}</div>
+            </div>
+            <div className="ContentPage-body">{metadataContent}</div>
         </div>
     );
 };

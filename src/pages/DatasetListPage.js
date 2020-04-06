@@ -8,21 +8,12 @@ import { api } from "../api";
 import { defer } from "../utils/async";
 import { bool, groupBy, items, nth, sorted } from "../utils/functional";
 
-// FIXME: This should be retrieved from the API and not hardcoded, but that
-// means using actual components
-//
-const collections = [
-    { value: "", label: "All datasets" },
-    { value: "bis", label: "BIS" },
-    { value: "findur", label: "FINDUR" },
-    { value: "bbg", label: "Bloomberg" }
-];
-
+// TODO: DatasetList
 // FIXME: Maybe rename that?
 
 export default props => {
     // This are our state cells
-    const prefix = props.prefix;
+    const prefix = props.match ? props.match.params.prefix : props.prefix;
     const [allDatasets, setAllDatasets] = useState([]);
     const [filteredDatasets, setFilteredDatasets] = useState([]);
     const [groupedDatasets, setGroupedDatasets] = useState([]);
@@ -116,7 +107,7 @@ export default props => {
     // @input queryFilter
     // @output queryFilterFunction
     useEffect(() => {
-        if (queryFilter) {
+        if (prefix || queryFilter) {
             // NOTE: This is similar to the queryRegexp but here we do a whole
             // string matc.
             const qs =
@@ -210,7 +201,7 @@ export default props => {
     // @render main
     return (
         <div className="DatasetListPage">
-            <PageHeader breadcrumbs={breadcrumbs}>Data Catalogue</PageHeader>
+            {breadcrumbs}
             <div className="DatasetListPage-search">
                 <TextField
                     autoFocus

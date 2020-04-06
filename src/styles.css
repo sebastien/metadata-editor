@@ -3,23 +3,185 @@ body {
 }
 
 :root {
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue",
-        sans-serif;
+    --font-family: "Inter", sans-serif;
     --color-white: #ffffff;
+    --color-white-faded: rgba(255, 255, 255, 0.15);
+    --color-transparent: rgba(255, 255, 255, 0);
     --color-grey-lt: #f0f0f0;
     --color-grey-ltr: #fafafa;
     --color-text-body: #172b4d;
     --color-grey: #afb6c2;
     --color-grey-dk: #6b778c;
+    --color-blue: #0052cc;
+    --color-blue-lt: #2077f8;
+    --color-shadow: rgba(0, 0, 0, 0.15);
 
     font-family: var(--font-family);
     font-size: 14px;
     margin: 0px;
 }
 
+.DatCat {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-blue);
+}
+
+.DatCat-header {
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+}
+
+.DatCat-header-logo {
+    display: block;
+    padding: 8px;
+    padding-left: 16px;
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.DatCat-header-logo-icon {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.DatCat-body {
+    flex-grow: 100;
+    display: flex;
+}
+
+.DatCat-sidebar {
+    flex-basis: 200px;
+    background-color: var(--color-blue);
+    color: var(--color-white);
+}
+
+.DatCat-content {
+    flex-grow: 100;
+    overflow: auto;
+    height: 100%;
+    position: relative;
+}
+
+.DatCat-content__wrapper {
+    /* FIXME: There might be a better option with CSS grid */
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+}
+
+.Sidebar {
+    padding: 8px;
+    padding-top: 0px;
+    margin-top: -4px;
+}
+
+.Sidebar-list,
+.Sidebar-item {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.Sidebar-item {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.Sidebar-item-icon {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.Sidebar-link {
+    color: var(--color-white);
+    display: block;
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 4px;
+    background-color: var(--color-transparent);
+    transition-property: background-color;
+    transition-duration: 0.25s;
+}
+.Sidebar-link:hover {
+    background-color: var(--color-white-faded);
+}
+
+.Sidebar-item .Sidebar-item .Sidebar-link {
+    font-size: 11px;
+    padding-top: 2px;
+    padding-left: 12px;
+    padding-bottom: 2px;
+}
+
 .Highlighter-match {
     background: yellow;
+}
+
+.ContentPage {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ContentPage-header {
+    background-color: var(--color-grey-lt);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0px;
+    padding-left: 8px;
+    padding-right: 16px;
+}
+
+.ContentPage-header-icon {
+    display: flex;
+    align-items: center;
+    margin: 8px;
+}
+
+.ContentPage-header-icon .Icon svg {
+    width: 48px;
+    height: 48px;
+    color: var(--color-blue);
+}
+
+.ContentPage-header-heading {
+    flex-grow: 1;
+    padding: 8px;
+}
+
+.ContentPage-header-title {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1.25em;
+}
+
+.ContentPage-header-subtitle {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.25em;
+    opacity: 0.5;
+}
+
+.ContentPage-header-actions {
+}
+
+.ContentPage-body {
+    background-color: var(--color-white);
+    flex-grow: 100;
 }
 
 .Page-header-title {
@@ -28,19 +190,8 @@ body {
     align-items: center;
 }
 
-.DomainPage,
-.DatasetPage,
-.DatasetListPage {
-    padding: 18px;
-    padding-top: 0px;
-}
-
 .DatasetPage-editor {
-    margin-left: -18px;
-    margin-right: -18px;
     padding-top: 18px;
-    background-color: var(--color-grey-ltr);
-    border-top: 2px solid var(--color-grey-lt);
 }
 
 .DomainPage-body {
@@ -62,18 +213,6 @@ body {
     display: flex;
     align-items: stretch;
     width: 100%;
-}
-
-.Editor-content {
-    max-width: 60em;
-    min-width: 20em;
-    flex-basis: 60em;
-}
-
-.Editor-content-fields {
-    box-shadow: 2px 2px 2px var(--color-grey-lt);
-    background: var(--color-white);
-    padding: 8px;
 }
 
 .Editor-content-actions {
@@ -107,6 +246,7 @@ body {
 /* ---------------------------------------------------------------------------
    ELEMENT
    --------------------------------------------------------------------------- */
+
 .Element-option-id {
     font-size: 11px;
     color: var(--color-grey);
@@ -225,10 +365,6 @@ body {
 
 .Section:first-child {
     border-top: 0px solid #f0f0f0;
-}
-
-.Section-body {
-    overflow: auto;
 }
 
 .Section-header {
