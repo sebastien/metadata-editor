@@ -6,8 +6,11 @@ import { api } from '../../api'
 import { swallow, head } from '../../utils/functional'
 
 export default function TablePreview (props) {
-  const dataset = props.path.split('/', 1)[0]
+  // @inputs
+  const dataset = props.dataset
   const limit = props.limit || 30
+
+  // @state
   const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([[]])
   const [grid, setGrid] = useState([[]])

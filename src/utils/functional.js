@@ -6,6 +6,59 @@ export function tee(functor, value) {
     return swallow(functor(value), value);
 }
 
+export function cmp(a, b) {
+    if (a === undefined) {
+        return b === undefined ? 0 : -cmp(b, a);
+    }
+    const ta = typeof a;
+    const tb = typeof b;
+    if (ta === tb) {
+        switch (ta) {
+            case "string":
+                return a.localeCompare(b);
+            case "object":
+                if (a === b) {
+                    return 0;
+                } else if (a instanceof Array) {
+                    const la = a.length;
+                    const lb = b.length;
+                    if (la < lb) {
+                        return -1;
+                    } else if (la > b) {
+                        return 1;
+                    } else {
+                        var i = 0;
+                        while (i < la) {
+                            const v = cmp(a[i], b[i]);
+                            if (v !== 0) {
+                                return v;
+                            }
+                        }
+                        return 0;
+                    }
+                } else {
+                    return -1;
+                }
+            default:
+                return a === b ? 0 : a > b ? 1 : -1;
+        }
+    } else {
+        return a === b ? 0 : a > b ? 1 : -1;
+    }
+}
+export function sorted(collection, key) {
+    const extractor =
+        typeof key === "function"
+            ? key
+            : key
+            ? _ => (_ ? _[key] : undefined)
+            : idem;
+    const res =
+        collection instanceof Array ? [].concat(collection) : list(collection);
+    res.sort((a, b) => (key ? cmp(extractor(a), extractor(b)) : cmp(a, b)));
+    return res;
+}
+
 export function bool(value) {
     if (typeof value === "object") {
         if (value instanceof Array) {

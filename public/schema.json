@@ -6,15 +6,6 @@
             "description": { "type": "text", "label": "Overview" }
         }
     },
-    "preview": {
-        "type": "section",
-        "label": "Preview",
-        "fields": {
-            "preview": {
-                "type": "table-preview"
-            }
-        }
-    },
     "structure": {
         "type": "section",
         "label": "Fields",

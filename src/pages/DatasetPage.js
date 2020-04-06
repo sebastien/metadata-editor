@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import Button, { ButtonGroup } from "@atlaskit/button";
+import Tabs from "@atlaskit/tabs";
 import PageHeader from "@atlaskit/page-header";
 import Tag from "@atlaskit/tag";
 import Editor from "../components/Editor";
+import TablePreview from "../components/preview/TablePreview";
 
 import { api } from "../api";
 
@@ -14,24 +16,39 @@ const save = (id, value) => {
 };
 
 export default props => {
-    // @input dataset
+    // @options
     const datasetId = props.dataset || null;
-    const [isReadOnly, setReadOnly] = useState(true);
-    const [value, setValue] = useState(undefined);
-    const [schema, setSchema] = useState({});
-    const [types, setTypes] = useState({});
-
-    const [datasetValue, setDatasetValue] = useState(null);
-
     const [datasetParent, datasetName] = (_ => [
         _.slice(0, -1).join("."),
         _[_.length - 1]
     ])((datasetId || "").split("."));
+    const schemaURL = props.schema || api.linkToDatasetSchema();
 
-    const schema_url = props.schema || api.linkToDatasetSchema();
+    // @cells
+    const [isReadOnly, setReadOnly] = useState(true);
+    const [value, setValue] = useState(undefined);
+    const [schema, setSchema] = useState({});
+    const [types, setTypes] = useState({});
+    const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+    const [datasetValue, setDatasetValue] = useState(null);
+
+    // @effect (datasetId) → datasetValue
+    // Loads the dataset metadata
+    useEffect(
+        _ => {
+            datasetId
+                ? api.getDatasetMetaData(datasetId).then(setDatasetValue)
+                : setDatasetValue({});
+        },
+        [datasetId]
+    );
+
+    // @effect (schemaURL) → (types,schema)
+    // Loads the overall metadata schema and types, this is used to configure
+    // the editor.
     useEffect(() => {
         async function fetchData() {
-            fetch(schema_url)
+            fetch(schemaURL)
                 .then(_ => {
                     return _.json();
                 })
@@ -54,7 +71,7 @@ export default props => {
                 });
         }
         fetchData();
-    }, [schema_url]);
+    }, [schemaURL]);
 
     const breadcrumbs = (
         <BreadcrumbsStateless>
@@ -67,14 +84,7 @@ export default props => {
         </BreadcrumbsStateless>
     );
 
-    useEffect(
-        _ => {
-            datasetId
-                ? api.getDatasetMetaData(datasetId).then(setDatasetValue)
-                : setDatasetValue({});
-        },
-        [datasetId]
-    );
+    // @render Page header actions
     const actions = isReadOnly ? (
         <ButtonGroup>
             <Button
@@ -108,21 +118,35 @@ export default props => {
         </ButtonGroup>
     );
 
+    // @render Metadata tab content
+    const metadataContent = (
+        <div className="DatasetPage-editor">
+            <Editor
+                schema={schema}
+                types={types}
+                path={datasetId}
+                defaultValue={datasetValue}
+                isReadOnly={isReadOnly}
+                onChange={_ => setValue(_)}
+            />
+        </div>
+    );
+
+    // @render Data tab content
+    const dataContent = <TablePreview dataset={datasetId} limit={100} />;
+
     return (
         <div className="DatasetPage">
             <PageHeader breadcrumbs={breadcrumbs} actions={actions}>
                 {datasetParent}.{datasetName}
             </PageHeader>
-            <div className="DatasetPage-editor">
-                <Editor
-                    schema={schema}
-                    types={types}
-                    path={datasetId}
-                    defaultValue={datasetValue}
-                    isReadOnly={isReadOnly}
-                    onChange={_ => setValue(_)}
-                />
-            </div>
+            <Tabs
+                tabs={[
+                    { label: "Metadata", content: metadataContent },
+                    { label: "Data", content: dataContent }
+                ]}
+                onSelect={(_tab, index) => setSelectedTabIndex(index)}
+            />
         </div>
     );
 };

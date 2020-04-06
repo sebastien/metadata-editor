@@ -8,13 +8,19 @@ import {
   withNavigationViewController
 } from '@atlaskit/navigation-next'
 import DomainPage, { DomainView } from './pages/DomainPage'
-import DatasetListPage from './pages/DatasetListPage'
+import DatasetListPage, { DatasetListView } from './pages/DatasetListPage'
 import DatasetPage from './pages/DatasetPage'
+import HomePage from './pages/HomePage'
 
 import './styles.css'
 
 const AppGlobalNavigation = () => (
-  <GlobalNavigation productIcon={AppIcon} onProductClick={() => {}} />
+  <GlobalNavigation
+    productIcon={AppIcon}
+    productHref='#index'
+    searchLabel='Search Label'
+    helpItems={() => <div>Help</div>}
+  />
 )
 
 const LinkItem = ({ components: { Item }, to, ...props }) => {
@@ -35,6 +41,7 @@ const LinkItem = ({ components: { Item }, to, ...props }) => {
   )
 }
 
+// FIXME: Maybe rename that?
 const ProductHomeView = {
   id: 'product/home',
   type: 'product',
@@ -51,11 +58,10 @@ const ProductHomeView = {
                 style={{
                   fontSize: '30px',
                   fontWeight: 700,
-                  lineHeight: '30px',
-                  textTransform: 'uppercase'
+                  lineHeight: '30px'
                 }}
               >
-                                DataHub
+                                DatCat
               </div>
             )
           },
@@ -73,13 +79,6 @@ const ProductHomeView = {
           id: 'datasets',
           text: 'Datasets',
           to: '/datasets'
-        },
-        {
-          type: 'InlineComponent',
-          component: LinkItem,
-          id: 'domain',
-          text: 'Domain',
-          to: '/domain'
         }
       ]
     }
@@ -90,10 +89,20 @@ const ProductHomeView = {
 // using a factory function, as we'd get the following error:
 //  React Hook "useEffect" is called in function "routeBase" which is
 //  neither a React function component or a custom React Hook function  react-hooks/rules-of-hooks
-const DatasetsRouteBase = props => {
+
+const HomeRouteBase = props => {
   const navigationViewController = props.navigationViewController
   useEffect(() => {
     navigationViewController.setView(ProductHomeView.id)
+  }, [navigationViewController])
+  return <HomePage concept={props.match.params.concept} />
+}
+const HomeRoute = withNavigationViewController(HomeRouteBase)
+
+const DatasetsRouteBase = props => {
+  const navigationViewController = props.navigationViewController
+  useEffect(() => {
+    navigationViewController.setView(DatasetListView.id)
   }, [navigationViewController])
 
   return <DatasetListPage prefix={props.match.params.prefix} />
@@ -103,7 +112,7 @@ const DatasetsRoute = withNavigationViewController(DatasetsRouteBase)
 const DatasetRouteBase = props => {
   const navigationViewController = props.navigationViewController
   useEffect(() => {
-    navigationViewController.setView(ProductHomeView.id)
+    navigationViewController.setView(DatasetListView.id)
   }, [navigationViewController])
 
   return <DatasetPage dataset={props.match.params.dataset} />
@@ -125,6 +134,7 @@ const App = props => {
   useEffect(
     _ => {
       navigationViewController.addView(ProductHomeView)
+      navigationViewController.addView(DatasetListView)
       navigationViewController.addView(DomainView)
     },
     [navigationViewController]
@@ -137,14 +147,12 @@ const App = props => {
           path={['/datasets/:prefix', '/datasets']}
           component={DatasetsRoute}
         />
-        <Route
-          path={['/dataset/:dataset']}
-          component={DatasetRoute}
-        />
+        <Route path={['/dataset/:dataset']} component={DatasetRoute} />
         <Route
           path={['/domain/:concept', '/domain']}
           component={DomainRoute}
         />
+        <Route path={['/', '/index']} component={HomeRoute} />
       </Switch>
     </LayoutManagerWithViewController>
   )
