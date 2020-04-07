@@ -27,6 +27,12 @@ a:focus {
     margin: 0px;
 }
 
+/* ----------------------------------------------------------------------------
+ *
+ * DAT CAT APP
+ *
+ ---------------------------------------------------------------------------- */
+
 .DatCat {
     display: flex;
     flex-direction: column;
@@ -62,22 +68,6 @@ a:focus {
     justify-content: center;
 }
 
-.SmartQuery {
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid var(--color-white-faded);
-    border-radius: 4px;
-    padding: 8px;
-    background-color: transparent;
-    color: var(--color-white);
-    width: 400px;
-}
-
-.SmartQuery:focus {
-    border-color: var(--color-white);
-    background-color: var(--color-white-faded);
-}
 .DatCat-body {
     flex-grow: 100;
     display: flex;
@@ -103,6 +93,104 @@ a:focus {
     bottom: 0px;
     right: 0px;
     left: 0px;
+}
+
+/* ----------------------------------------------------------------------------
+ *
+ * SMART QUERY
+ *
+ ----------------------------------------------------------------------------*/
+
+.SmartQuery {
+    display: flex;
+    align-items: stretch;
+    font-family: var(--font-family);
+    border: 2px solid var(--color-white-faded);
+    border-radius: 4px;
+    background-color: transparent;
+    width: 400px;
+}
+
+.SmartQuery:focus {
+    border-color: var(--color-white);
+    background-color: var(--color-white-faded);
+}
+.SmartQuery-input {
+    background: none;
+    color: var(--color-white);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px;
+    border: 0px solid transparent;
+}
+
+.SmartQuery-filters {
+    display: flex;
+    border-radius: 2px;
+    padding: 6px;
+    background-color: var(--color-white-faded);
+}
+
+.SmartQuery-filter {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    background-color: var(--color-blue);
+    text-decoration: none;
+    font-size: 11px;
+    padding-left: 4px;
+    padding-right: 4px;
+    color: var(--color-white);
+    border-radius: 1.5em;
+    margin-right: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.SmartQuery-filter:last-child {
+    margin-right: 0px;
+}
+
+.SmartQuery-filter-icon {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.SmartQuery-filter-label {
+    font-weight: bold;
+    padding-left: 4px;
+}
+.SmartQuery-filter-value[data-type="query"]:before {
+    content: "/";
+}
+
+.SmartQuery-filter-value[data-type="match"]:before {
+    content: ":";
+}
+
+.SmartQuery-filter-action {
+    display: inline-block;
+    border: 0px solid transparent;
+    background-color: transparent;
+    padding: 0px;
+    padding-left: 4px;
+    color: var(--color-white-faded);
+    outline: 0px solid transparent;
+    cursor: pointer !important;
+}
+
+.SmartQuery-filter:hover {
+    background-color: var(--color-white);
+    color: var(--color-blue);
+}
+
+.SmartQuery-filter-label:hover {
+    /* NOTE: We cover the remove icon */
+    transform: translateX(7px);
+}
+
+.SmartQuery-filter-action:hover {
+    color: var(--color-blue);
 }
 
 .Sidebar {

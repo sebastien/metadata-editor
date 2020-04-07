@@ -2,6 +2,55 @@ export function swallow(value, returns) {
     return returns;
 }
 
+export function len(value) {
+    const t = typeof value;
+    if (t === "string") {
+        return value.length;
+    } else if (t === "object") {
+        if (value instanceof Array || value instanceof String) {
+            return value.length;
+        } else {
+            var i = 0;
+            for (const _ in value) {
+                i += 1;
+            }
+            return i;
+        }
+    } else {
+        return 0;
+    }
+}
+
+export function slice(value, start, end) {
+    const n = len(value);
+    start = start === undefined ? 0 : start;
+    end = end === undefined ? n : end;
+    start = start < 0 ? n + start : start;
+    end = end < 0 ? n + end : end;
+    const i = Math.min(start, end);
+    const j = Math.max(start, end);
+    const t = typeof value;
+    if (t === "string") {
+        return value.substring(i, j);
+    } else if (t === "object") {
+        if (value instanceof Array) {
+            return value.slice(i, j);
+        } else {
+            var res = {};
+            var ki = 0;
+            for (var k in value) {
+                if (i <= ki && k < j) {
+                    res[k] = value[k];
+                }
+                ki += 1;
+            }
+            return res;
+        }
+    } else {
+        return undefined;
+    }
+}
+
 export function tee(functor, value) {
     return swallow(functor(value), value);
 }
@@ -222,14 +271,20 @@ export function setnth(value, index, v) {
     return list(value).map((_, i) => (i === index ? v : _));
 }
 
-export function merge(value, other) {
+export function merge(value, other, replace) {
     if (value === null || value === undefined) {
         return other;
     } else if (other === null || value === other) {
         return value;
     } else {
-        // FIXME: This is a bit sketchy....
-        return Object.assign({}, value, other);
+        for (var k in other) {
+            const v = value[k];
+            const w = other[k];
+            if (v === undefined || (replace && v !== w)) {
+                value[k] = w;
+            }
+        }
+        return value;
     }
 }
 

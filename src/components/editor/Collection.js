@@ -87,7 +87,7 @@ export default function Collection(props) {
             <ul className="Collection-list">
                 {value.length === 0 ? (
                     <li>
-                        <Tag text="Empty" />
+                        <Tag text="N/A" />
                     </li>
                 ) : (
                     value.map((item, i) => {

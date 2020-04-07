@@ -80,7 +80,7 @@ function FieldViewFactory (props, defaultValue) {
   const schema = props.schema || {}
   const type = schema.type
   if (defaultValue === null || defaultValue === undefined) {
-    return props => <Tag text='Empty' />
+    return props => <Tag text='N/A' />
   } else {
     switch (type) {
       case 'label':
@@ -98,7 +98,7 @@ function FieldViewFactory (props, defaultValue) {
       case 'select':
         return fieldProps =>
           !defaultValue || defaultValue.length === 0 ? (
-            <Tag text='Empty' />
+            <Tag text='N/A' />
           ) : schema.multiple ? (
             <Group>
               {(defaultValue || []).map((v, k) => (
