@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Icons from "./Icons";
 import { api } from "../api";
 import { slice, merge } from "../utils/functional";
 import { plural } from "../utils/text";
+import { defer } from "../utils/async";
 
 const QueryFilter = props => {
     return (
@@ -33,11 +34,11 @@ const QueryFilter = props => {
  */
 function parseQuery(query) {
     const [type, prefix] = query.split("/");
-    const res = [];
+    const filters = [];
     // We make sure the parent is a collection
     const parent = prefix ? "/" + plural(type) : "/";
     if (type) {
-        res.push(
+        filters.push(
             // If it's a plural form, we consider it a query, otherwise
             // it's a match.
             merge(
@@ -48,7 +49,21 @@ function parseQuery(query) {
             )
         );
     }
-    return res;
+    return filters;
+}
+
+function formatQuery(filters, keyword) {
+    return (
+        "/" +
+        (filters
+            .map(_ =>
+                _.query || _.match
+                    ? _.type + "/" + (_.query || _.match)
+                    : _.type
+            )
+            .join("/") +
+            (keyword ? "?q=" + encodeURIComponent(keyword) : ""))
+    );
 }
 
 function refineSearchFor(type) {
@@ -61,10 +76,26 @@ function refineSearchFor(type) {
 }
 
 export default props => {
-    const filters = parseQuery(props.match.params.query);
+    const queryString = props.match.params.query;
+    const params = new URLSearchParams(props.location.search);
+    const query = params.get("q") || "";
+    const filters = parseQuery(queryString);
+    const [redirect, redirectTo] = useState(null);
+    const [deferredInput] = useState(defer(100));
     const searchFor = filters[0]
         ? refineSearchFor(filters[0].type)
         : "the catalogue";
+    // That's how we support rediraction on input change
+    useEffect(_ => redirectTo(null), [redirect]);
+
+    // @handler When the search input changes, we redirect to
+    // change the URL -- ie. the state is stored in the URL
+    const onInputQuery = value => {
+        if (value !== params.get("q")) {
+            redirectTo(formatQuery(filters, value));
+        }
+    };
+
     return (
         <div className="SmartQuery">
             <div className="SmartQuery-filters">
@@ -77,8 +108,11 @@ export default props => {
             <input
                 className="SmartQuery-input"
                 type="search"
+                value={query}
                 placeholder={`Search ${searchFor}…`}
+                onChange={_ => onInputQuery(_.target.value)}
             />
+            {redirect ? <Redirect to={redirect} /> : null}
         </div>
     );
 };
