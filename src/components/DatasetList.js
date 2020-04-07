@@ -8,12 +8,17 @@ export default props => {
     const queryFilter = props.query ? new RegExp(props.query, "i") : null;
     const items = props.items;
     return (
-        <ul className="DatasetList">
-            {items.map((v, i) => (
-                <li className="DatasetList-item" key={i}>
-                    <DatasetItem {...v} />
-                </li>
-            ))}
-        </ul>
+        <div className="DatasetList">
+            <div className="DatasetList-header">
+                {"" + items.length} elements
+            </div>
+            <ul className="DatasetList-items">
+                {items.map((v, i) => (
+                    <li className="DatasetList-item" key={i}>
+                        <DatasetItem {...v} />
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };

@@ -263,6 +263,12 @@ a:focus {
     font-weight: 600;
 }
 
+.Field-value__text {
+    max-width: 50em;
+    display: block;
+    line-height: 1.5em;
+}
+
 /* ---------------------------------------------------------------------------
    ELEMENT
    --------------------------------------------------------------------------- */
@@ -409,10 +415,24 @@ a:focus {
 }
 
 .DatasetList {
+}
+
+.DatasetList-header {
+    font-size: 12px;
+    padding: 24px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-grey-lt);
+    color: var(--color-grey);
+}
+
+.DatasetList-items {
+    column-count: 2;
     list-style-type: none;
     padding: 0px;
     margin: 0px;
-    column-count: 2;
+    padding: 16px;
+    padding-top: 8px;
 }
 
 .DatasetList-item {
@@ -460,15 +480,18 @@ a:focus {
 .DatasetItem {
     text-decoration: none;
     color: var(--color-text-body);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
 }
 
 .DatasetItem-header {
     display: flex;
     align-items: center;
     padding-bottom: 4px;
+}
+
+.DatasetItem-heading,
+.DatasetItem-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .DatasetItem-icon {
@@ -645,8 +668,7 @@ a:focus {
 }
 
 .DatasetListPage {
-    height: 100%;
+    min-height: 100%;
     background-color: var(--color-white);
-    padding: 16px;
     border-top-left-radius: 4px;
 }
