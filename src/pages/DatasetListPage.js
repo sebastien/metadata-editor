@@ -14,18 +14,12 @@ import { bool, groupBy, items, nth, sorted } from "../utils/functional";
 export default props => {
     // This are our state cells
     const prefix = props.match ? props.match.params.prefix : props.prefix;
-    const [allDatasets, setAllDatasets] = useState([]);
-    const [filteredDatasets, setFilteredDatasets] = useState([]);
-    const [groupedDatasets, setGroupedDatasets] = useState([]);
-    // The query part of the datasets is a bit complex because we need
-    // to create the query string form the prefix and the current
-    // query while also creating a regexp that is going to be reused
-    // for highlighting.
-    const [query, setQuery] = useState(null);
-    const [queryFilter, setQueryFilter] = useState(null);
-    const [queryRegexp, setQueryRegexp] = useState(null);
-    const [queryFilterFunction, setQueryFilterFunction] = useState(null);
-    const deferredInput = useState(defer(100))[0];
+    const params = new URLSearchParams(props.location.search);
+    const query = params.get("q");
+
+    const [datasets, setDatasets] = useState([]);
+    const [filter, setFilter] = useState(null);
+    const [highlighter, setHighlighter] = useState(null);
 
     // Loads the list of datasets and converts them in something
     // like `{id,name,description,qualifiedName,group,value}`
@@ -35,7 +29,7 @@ export default props => {
         // This normalizes the datasets from the data format into the format
         // required by the view.
         api.listDatasets().then(_ =>
-            setAllDatasets(
+            setDatasets(
                 Object.entries(_ || {}).map(kv => {
                     const [k, v] = kv;
                     const qualifiedName =
@@ -58,141 +52,50 @@ export default props => {
         );
     }, []);
 
-    // Filters all the datasets using the filter function
-    // @input queryFilterFunction
-    // @output filteredDatasets
+    // @input prefix
+    // @input query
+    // @output optional predicate to filter and match
     useEffect(
         _ => {
-            setFilteredDatasets(
-                // We pre-sort all the datasets, so the groups will
-                // also be sorted in the same way.
-                sorted(
-                    queryFilterFunction
-                        ? allDatasets.filter(queryFilterFunction.predicate)
-                        : allDatasets,
-                    _ => _.id
-                )
-            );
+            if (prefix || query) {
+                const re_prefix = prefix ? new RegExp("^" + prefix) : null;
+                const re_query = query ? new RegExp(query, "i") : null;
+                setFilter(_ => _ => {
+                    return (
+                        (re_prefix ? re_prefix.test(_.id) : true) &&
+                        (re_query
+                            ? re_query.test(_.id) ||
+                              re_query.test(_.description)
+                            : true)
+                    );
+                });
+            } else {
+                setFilter(null);
+            }
         },
-        [allDatasets, queryFilterFunction]
+        [prefix, query]
     );
 
-    // Groups the datasets together
-    // @input filteredDatasets
-    // @output groupedDatasets
-    useEffect(() => {
-        setGroupedDatasets(
-            sorted(
-                items(groupBy(filteredDatasets, _ => (_ ? _.group : ""))),
-                _ => _[0]
-            )
-        );
-    }, [filteredDatasets]);
-
-    // Sets the query filter function once the queryFilter has changed
-    // (when the user selects the search button)
-    // @input prefix
-    // @input queryFilter
-    // @output queryRegexp
-    useEffect(() => {
-        if (queryFilter) {
-            setQueryRegexp(queryFilter ? new RegExp(queryFilter, "i") : null);
-        } else {
-            setQueryRegexp(null);
-        }
-    }, [prefix, queryFilter]);
-
-    // Sets the query filter function once the queryFilter has changed
-    // (when the user selects the search button)
-    // @input queryFilter
-    // @output queryFilterFunction
-    useEffect(() => {
-        if (prefix || queryFilter) {
-            // NOTE: This is similar to the queryRegexp but here we do a whole
-            // string matc.
-            const qs =
-                prefix || queryFilter
-                    ? (prefix ? "^" + prefix : "") +
-                      (queryFilter ? ".*" + queryFilter + ".*" : "")
-                    : null;
-            const re = new RegExp(qs, "i");
-            const predicate = _ =>
-                re.test(_.id) || re.test(_.label) || re.test(_.description);
-            setQueryFilterFunction({ predicate: predicate });
-        } else {
-            setQueryFilterFunction(null);
-        }
-    }, [prefix, queryFilter]);
-
-    // @render List of datasets
-    const renderList = l => (
-        <ul className="DatasetList">
-            {(l || []).map((d, i) =>
-                d ? (
-                    <li
-                        className="DatasetItem"
-                        key={d.id}
-                        data-metadata={bool(d.value)}
-                    >
-                        <Link
-                            className="DatasetItem-link"
-                            to={api.linkToDataset(d.id)}
-                        >
-                            <div className="DatasetItem-label">
-                                {d.qualifiedName && queryRegexp ? (
-                                    <Highlighter
-                                        text={d.qualifiedName}
-                                        query={queryRegexp}
-                                    />
-                                ) : (
-                                    d.qualifiedName
-                                )}
-                            </div>
-                            <div className="DatasetItem-description">
-                                {d.description && queryRegexp ? (
-                                    <Highlighter
-                                        text={d.description}
-                                        query={queryRegexp}
-                                    />
-                                ) : (
-                                    d.description
-                                )}
-                            </div>
-                        </Link>
-                    </li>
-                ) : null
-            )}
-        </ul>
+    // @input query
+    // @output optional regexp to highlight matches
+    useEffect(
+        _ =>
+            query
+                ? setHighlighter(new RegExp(query, "i"))
+                : setHighlighter(null),
+        [query]
     );
 
-    // @render Groups of datasets
-    const renderGroup = group => (
-        <li key={group[0] || "*"} className="DatasetGroup">
-            {group[0] ? (
-                <Link
-                    className="DatasetGroup-label"
-                    to={api.linkToDatasets(group[0])}
-                >
-                    {group[0]}
-                </Link>
-            ) : null}
-            {renderList(group[1])}
-        </li>
-    );
+    console.log("FILTER", filter);
 
-    /*{
-        groupedDatasets.length <= 1 ? (
-            renderList(filteredDatasets)
-        ) : (
-            <ul className="DatasetGroup-list">
-                {groupedDatasets.map(renderGroup)}
-            </ul>
-        );
-    }*/
     // @render main
     return (
         <div className="DatasetListPage">
-            <DatasetList items={filteredDatasets} />
+            <DatasetList
+                items={datasets}
+                filter={filter}
+                highlight={highlighter}
+            />
         </div>
     );
 };

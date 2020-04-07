@@ -22,7 +22,7 @@ const remap = (text, re, callback) => {
     return res;
 };
 
-export default props => {
+export default function Highlighter(props) {
     const text = props.text;
     const query =
         typeof props.query === "string"
@@ -45,4 +45,4 @@ export default props => {
             </span>
         );
     }
-};
+}

@@ -239,7 +239,8 @@ a:focus {
 }
 
 .Highlighter-match {
-    background: yellow;
+    background: #ffef00;
+    font-style: normal;
 }
 
 .ContentPage {
