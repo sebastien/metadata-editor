@@ -10,6 +10,11 @@ export default function (props) {
           <span className='DatCat-header-logo-icon'>{Icons.DatCat}</span>
           <span className='DatCat-header-logo-label'>DatCat</span>
         </Link>
+        <div className='DatCat-header-query'>
+          <input className='SmartQuery' type='search' placeholder='Search for datasets…' />
+        </div>
+        <div className='DatCat-header-actions' />
+
       </header>
       <section className='DatCat-body'>
         <nav className='DatCat-sidebar'><Sidebar /></nav>

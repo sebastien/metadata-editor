@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import Icons from "../components/Icons";
-import Tabs from "@atlaskit/tabs";
-import Tag from "@atlaskit/tag";
 import Editor from "../components/Editor";
-import TablePreview from "../components/preview/TablePreview";
 
 import { api } from "../api";
 
 export default props => {
     // @options
     const datasetId = props.match ? props.match.params.dataset : props.dataset;
-    const [datasetParent, datasetName] = (_ => [
-        _.slice(0, -1).join("."),
-        _[_.length - 1]
-    ])((datasetId || "").split("."));
+    // const [datasetParent, datasetName] = (_ => [
+    //     _.slice(0, -1).join("."),
+    //     _[_.length - 1]
+    // ])((datasetId || "").split("."));
     const schemaURL = props.schema || api.linkToDatasetSchema();
 
     // @cells
@@ -22,7 +19,6 @@ export default props => {
     const [value, setValue] = useState(undefined);
     const [schema, setSchema] = useState({});
     const [types, setTypes] = useState({});
-    const [selectedTabIndex, setSelectedTabIndex] = useState(0);
     const [datasetValue, setDatasetValue] = useState(null);
 
     // @action SaveChanges
@@ -122,7 +118,7 @@ export default props => {
     );
 
     // @render Data tab content
-    const dataContent = <TablePreview dataset={datasetId} limit={100} />;
+    // const dataContent = <TablePreview dataset={datasetId} limit={100} />;
 
     return (
         <div className="DatasetPage ContentPage">

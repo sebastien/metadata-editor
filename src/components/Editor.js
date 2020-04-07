@@ -23,37 +23,34 @@ export default function Editor (props) {
 
   return (
     <div className='Editor'>
-      <section className='Editor-content'>
-        <div className='Editor-content-fields'>
-          {Object.entries(schema).map((kv, i) => {
-            const [k, v] = kv
-            return (
-              <Field
-                key={i}
-                id={k}
-                path={root + '/' + k}
-                schema={v}
-                types={types}
-                isReadOnly={isReadOnly}
-                defaultValue={value ? value[k] : undefined}
-                onChange={v => {
-                  const res = { ...value }
-                  res[k] = v
-                  setValue(res)
-                  if (props.persist) {
-                    storage.setItem(storageKey, JSON.stringify(res))
-                  }
-                  props && props.onChange && props.onChange(res)
-                }}
-              />
-            )
-          })}
-        </div>
-        <div style={{ display: 'none' }} className='Editor-content-actions'>
-          <Button onClick={clear}>Clear</Button>
-        </div>
-      </section>
-      <aside className='Editor-sidebar' />
+      <div className='Editor-fields'>
+        {Object.entries(schema).map((kv, i) => {
+          const [k, v] = kv
+          return (
+            <Field
+              key={i}
+              id={k}
+              path={root + '/' + k}
+              schema={v}
+              types={types}
+              isReadOnly={isReadOnly}
+              defaultValue={value ? value[k] : undefined}
+              onChange={v => {
+                const res = { ...value }
+                res[k] = v
+                setValue(res)
+                if (props.persist) {
+                  storage.setItem(storageKey, JSON.stringify(res))
+                }
+                props && props.onChange && props.onChange(res)
+              }}
+            />
+          )
+        })}
+      </div>
+      <div style={{ display: 'none' }} className='Editor-actions'>
+        <Button onClick={clear}>Clear</Button>
+      </div>
     </div>
   )
 }

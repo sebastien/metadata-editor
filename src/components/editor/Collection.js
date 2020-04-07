@@ -4,7 +4,9 @@ import TextField from "@atlaskit/textfield";
 import InlineEdit from "@atlaskit/inline-edit";
 import Tag from "@atlaskit/tag";
 import Field, { resolveSchema } from "./Field";
-import { firstdef } from "../../utils/functional";
+import { list, firstdef } from "../../utils/functional";
+import { assert } from "../../utils/assert";
+import Icons from "../Icons";
 
 // SEE: https://atlaskit.atlassian.com/packages/core/icon/example/icon-explorer
 import Remove from "@atlaskit/icon/glyph/editor/remove";
@@ -13,7 +15,12 @@ import Up from "@atlaskit/icon/glyph/arrow-up";
 import Down from "@atlaskit/icon/glyph/arrow-down";
 
 export default function Collection(props) {
-    const value = props.defaultValue || [];
+    const value = props.defaultValue ? list(props.defaultValue) : [];
+    assert(
+        value instanceof Array,
+        "Default value should be an array, got",
+        value
+    );
     const schema = props.schema;
     const label = firstdef(props.label, schema.label);
     const type = firstdef(props.type, schema.type);
@@ -87,17 +94,14 @@ export default function Collection(props) {
                         const k = isList ? i : item.key;
                         const v = isList ? item : item.value;
                         return (
-                            <li className="Collection-list-item" key={i}>
-                                <div className="Collection-list-item-header">
-                                    <div className="Collection-list-item-header-tag">
-                                        <Tag
-                                            text={schema.itemLabel || "Item"}
-                                            color="grey"
-                                        />
+                            <li className="Collection-item" key={i}>
+                                <div className="Collection-item-header">
+                                    <div className="Collection-item-header-icon">
+                                        {Icons.Field}
                                     </div>
-                                    <div className="Collection-list-item-header-key">
+                                    <div className="Collection-item-header-key">
                                         {isReadOnly ? (
-                                            <span className="Collection-list-item-header-key-label">
+                                            <span className="Collection-item-header-key-label">
                                                 {k}
                                             </span>
                                         ) : (
@@ -111,11 +115,11 @@ export default function Collection(props) {
                                                 )}
                                                 readView={_ =>
                                                     k ? (
-                                                        <span className="Collection-list-item-header-key-label">
+                                                        <span className="Collection-item-header-key-label">
                                                             {k}
                                                         </span>
                                                     ) : (
-                                                        <em className="Collection-list-item-header-key-placeholder">
+                                                        <em className="Collection-item-header-key-placeholder">
                                                             New item
                                                         </em>
                                                     )
@@ -128,7 +132,7 @@ export default function Collection(props) {
                                         )}
                                     </div>
                                     {isReadOnly ? null : (
-                                        <div className="Collection-list-item-header-actions">
+                                        <div className="Collection-item-header-actions">
                                             <Button
                                                 onClick={() => moveUp(i)}
                                                 isDisabled={i === 0}
@@ -157,7 +161,7 @@ export default function Collection(props) {
                                         </div>
                                     )}
                                 </div>
-                                <div className="Collection-list-item-body">
+                                <div className="Collection-item-body">
                                     <Field
                                         id={k}
                                         path={

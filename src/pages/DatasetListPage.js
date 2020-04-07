@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
-import PageHeader from "@atlaskit/page-header";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TextField from "@atlaskit/textfield";
 import Highlighter from "../components/Highlighter";
+import DatasetList from "../components/DatasetList.js";
 import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
 import { api } from "../api";
 import { defer } from "../utils/async";
@@ -124,24 +124,6 @@ export default props => {
         }
     }, [prefix, queryFilter]);
 
-    // @render Breadcrumbs
-    const breadcrumbs = (
-        <BreadcrumbsStateless>
-            <BreadcrumbsItem
-                text="Datasets"
-                href={`#${api.linkToDatasets()}`}
-                key="0"
-            />
-            {props.prefix ? (
-                <BreadcrumbsItem
-                    text={props.prefix}
-                    href={`#${api.linkToDatasets(props.prefix)}`}
-                    key="1"
-                />
-            ) : null}
-        </BreadcrumbsStateless>
-    );
-
     // @render List of datasets
     const renderList = l => (
         <ul className="DatasetList">
@@ -198,30 +180,19 @@ export default props => {
         </li>
     );
 
+    /*{
+        groupedDatasets.length <= 1 ? (
+            renderList(filteredDatasets)
+        ) : (
+            <ul className="DatasetGroup-list">
+                {groupedDatasets.map(renderGroup)}
+            </ul>
+        );
+    }*/
     // @render main
     return (
         <div className="DatasetListPage">
-            {breadcrumbs}
-            <div className="DatasetListPage-search">
-                <TextField
-                    autoFocus
-                    placeholder="Search for data"
-                    defaultValue={query}
-                    onChange={event => {
-                        const q = event.target.value;
-                        setQuery(q);
-                        deferredInput.push(_ => setQueryFilter(q));
-                    }}
-                />
-            </div>
-
-            {groupedDatasets.length <= 1 ? (
-                renderList(filteredDatasets)
-            ) : (
-                <ul className="DatasetGroup-list">
-                    {groupedDatasets.map(renderGroup)}
-                </ul>
-            )}
+            <DatasetList items={filteredDatasets} />
         </div>
     );
 };

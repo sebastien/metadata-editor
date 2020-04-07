@@ -8,7 +8,6 @@ import Group from '@atlaskit/tag-group'
 import Composite from './Composite'
 import Section from './Section'
 import Collection from './Collection'
-import Element from './Element'
 import DistributionPreview from '../preview/DistributionPreview'
 import TablePreview from '../preview/TablePreview'
 import { assert } from '../../utils'
@@ -141,8 +140,6 @@ export default function Field (props) {
     return <Composite {...props} />
   } else if (type === 'collection' || type === 'list') {
     return <Collection {...props} />
-  } else if (type === 'element') {
-    return <Element {...props} />
   } else if (type === 'table-preview') {
     return <TablePreview {...props} />
   } else if (type === 'distribution-preview') {

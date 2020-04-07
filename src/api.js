@@ -17,8 +17,8 @@ class API {
         return this.fetchJSON(`dataset/?meta`);
     }
 
-    listDatasetDimensions(dataset) {
-        return this.fetchJSON(`dataset/${dataset}/dimension/`);
+    listDatasetFields(dataset) {
+        return this.fetchJSON(`dataset/${dataset}/field/`);
     }
 
     getDatasetMetaData(dataset) {
@@ -29,10 +29,8 @@ class API {
         return this.fetchJSON(`dataset/${dataset}/preview`);
     }
 
-    getDatasetDimensionDistribution(dataset, dimension) {
-        return this.fetchJSON(
-            `dataset/${dataset}/dimension/${dimension}/distribution`
-        );
+    getDatasetFieldDistribution(dataset, field) {
+        return this.fetchJSON(`dataset/${dataset}/field/${field}/distribution`);
     }
 
     saveDatasetMetaData(dataset, data) {

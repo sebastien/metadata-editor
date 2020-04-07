@@ -48,7 +48,7 @@ export default function DistributionPreview (props) {
     _ =>
       swallow(
         api
-          .getDatasetDimensionDistribution(dataset, field)
+          .getDatasetFieldDistribution(dataset, field)
           .then(_ => setDist(_))
       ),
     [dataset, field, setDist]

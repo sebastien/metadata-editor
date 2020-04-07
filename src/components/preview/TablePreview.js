@@ -42,7 +42,7 @@ export default function TablePreview (props) {
     _ =>
       swallow(
         api
-          .listDatasetDimensions(dataset)
+          .listDatasetFields(dataset)
           .then(_ => setColumns(normalizeColumns(_)))
       ),
     [dataset]

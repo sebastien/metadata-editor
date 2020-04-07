@@ -2,10 +2,15 @@ body {
     margin: 0px;
 }
 
+a:focus {
+    outline: 0px solid transparent;
+}
+
 :root {
     --font-family: "Inter", sans-serif;
     --color-white: #ffffff;
     --color-white-faded: rgba(255, 255, 255, 0.15);
+    --color-black-faded: rgba(0, 0, 10, 0.15);
     --color-transparent: rgba(255, 255, 255, 0);
     --color-grey-lt: #f0f0f0;
     --color-grey-ltr: #fafafa;
@@ -18,6 +23,7 @@ body {
 
     font-family: var(--font-family);
     font-size: 14px;
+    line-height: 1.35em;
     margin: 0px;
 }
 
@@ -38,8 +44,7 @@ body {
 
 .DatCat-header-logo {
     display: block;
-    padding: 8px;
-    padding-left: 16px;
+    padding: 16px;
     font-size: 22px;
     font-weight: bold;
     color: var(--color-white);
@@ -51,6 +56,28 @@ body {
     margin-right: 8px;
 }
 
+.DatCat-header-query {
+    flex-grow: 100;
+    display: flex;
+    justify-content: center;
+}
+
+.SmartQuery {
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid var(--color-white-faded);
+    border-radius: 4px;
+    padding: 8px;
+    background-color: transparent;
+    color: var(--color-white);
+    width: 400px;
+}
+
+.SmartQuery:focus {
+    border-color: var(--color-white);
+    background-color: var(--color-white-faded);
+}
 .DatCat-body {
     flex-grow: 100;
     display: flex;
@@ -190,10 +217,6 @@ body {
     align-items: center;
 }
 
-.DatasetPage-editor {
-    padding-top: 18px;
-}
-
 .DomainPage-body {
     display: flex;
 }
@@ -215,16 +238,13 @@ body {
     width: 100%;
 }
 
-.Editor-content-actions {
+.Editor-fields {
+    width: 100%;
+}
+.Editor-actions {
     border-top: 2px solid #f0f0f0;
     background-color: #fafafa;
     padding: 16px;
-}
-
-.Editor-sidebar {
-    padding: 16px;
-    flex-grow: grow;
-    min-width: 10em;
 }
 
 .Field[data-state~="readonly"] {
@@ -269,12 +289,12 @@ body {
     flex-grow: 1;
 }
 
-.Collection-list-item .Collection-list-item-header-actions {
+.Collection-item .Collection-item-header-actions {
     transition-property: opacity;
     transition-duration: 0.25s;
     opacity: 0.1;
 }
-.Collection-list-item:hover .Collection-list-item-header-actions {
+.Collection-item:hover .Collection-item-header-actions {
     opacity: 1;
 }
 
@@ -288,34 +308,38 @@ body {
    --------------------------------------------------------------------------- */
 
 .Collection-list,
-.Collection-list-item {
+.Collection-item {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.Collection-list-item {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.Collection-item {
+    margin-bottom: 16px;
 }
 
-.Collection-list-item-header {
+.Collection-item-header {
     display: flex;
     align-items: center;
-    min-height: 3em;
-    border-bottom: 2px solid var(--color-grey-lt);
 }
 
-.Collection-list-item-header-key {
+.Collection-item-header-icon {
+    color: var(--color-blue);
+    margin-right: 8px;
+}
+.Collection-item-header-key {
     flex-grow: 100;
-    margin-bottom: 8px;
 }
 
-.Collection-list-item-header-key-label {
+.Collection-item-header-key-label {
     display: inline-block;
     /* We need to offset the InlineEdit expanded size */
     padding: 5px;
     font-weight: bold;
+}
+.Collection-item-body {
+    padding-left: 26px;
+    margin-top: -8px;
 }
 
 .Collection-creator {
@@ -324,32 +348,32 @@ body {
     justify-content: flex-end;
 }
 
-.Collection[data-type="list"] .Collection-list-item {
+.Collection[data-type="list"] .Collection-item {
     display: flex;
     padding-bottom: 5px;
     margin-bottom: 0px;
 }
 
-.Collection[data-type="list"] .Collection-list-item-body {
+.Collection[data-type="list"] .Collection-item-body {
     order: 0;
     flex-grow: 1;
 }
 
-.Collection[data-type="list"] .Collection-list-item-header {
+.Collection[data-type="list"] .Collection-item-header {
     order: 1;
     min-height: 0em;
     border-bottom: 0px solid var(--color-grey-lt);
 }
 
-.Collection[data-type="list"] .Collection-list-item-header-tag,
-.Collection[data-type="list"] .Collection-list-item-header-key {
+.Collection[data-type="list"] .Collection-item-header-tag,
+.Collection[data-type="list"] .Collection-item-header-key {
     display: none;
 }
 
-.Collection[data-style="grid"] .Collection-list-item {
+.Collection[data-style="grid"] .Collection-item {
     border-bottom: 1px solid var(--color-grey-lt);
 }
-.Collection[data-style="grid"] .Collection-list-item:last-child {
+.Collection[data-style="grid"] .Collection-item:last-child {
     border-bottom: 0px solid var(--color-grey-lt);
 }
 
@@ -377,6 +401,7 @@ body {
 .Section-header-title {
     margin: 0px;
     flex-grow: 100;
+    font-size: 16px;
 }
 .Section-body {
     padding: 16px;
@@ -390,14 +415,19 @@ body {
     column-count: 2;
 }
 
-.DatasetGroup,
-.DatasetItem {
+.DatasetList-item {
     list-style-type: none;
-    padding: 8px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    overflow: ellipsis;
+    padding: 0px;
+    margin: 0px;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    margin-right: 8px;
+}
+
+.DatasetList-item:hover {
+    background-color: var(--color-grey-lt);
 }
 
 .DatasetGroup {
@@ -427,19 +457,42 @@ body {
     display: block;
 }
 
-.DatasetItem:hover {
-    background-color: var(--color-grey-lt);
-}
-
-.DatasetItem-link {
+.DatasetItem {
     text-decoration: none;
     color: var(--color-text-body);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.DatasetItem-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 4px;
+}
+
+.DatasetItem-icon {
+    margin-right: 8px;
+    color: var(--color-grey);
+}
+.DatasetItem-icon .Icon svg {
+    width: 32px;
+    height: 32px;
+}
+.DatasetItem:hover .DatasetItem-icon {
+    color: var(--color-blue);
 }
 
 .DatasetItem-label {
     font-weight: bold;
     font-size: 14px;
     text-overflow: ellipsis;
+}
+
+.DatasetItem-meta {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.5;
 }
 
 .DatasetItem-description {
@@ -589,4 +642,11 @@ body {
 
 .DistributionPreview {
     display: none;
+}
+
+.DatasetListPage {
+    height: 100%;
+    background-color: var(--color-white);
+    padding: 16px;
+    border-top-left-radius: 4px;
 }
