@@ -6,17 +6,23 @@ import { slice, merge } from "../utils/functional";
 import { plural } from "../utils/text";
 import { defer } from "../utils/async";
 
+const RE_EMPTY = new RegExp("^\\s*$");
+
 const QueryFilter = props => {
+    const title =
+        props.type +
+        (props.prefix ? "/" + props.prefix : "") +
+        (props.match ? ":" + props.match : "");
     return (
-        <Link className="SmartQuery-filter" to={props.parent}>
+        <Link className="SmartQuery-filter" to={props.parent} title={title}>
             {props.type === "keyword" ? (
                 <span className="SmartQuery-filter-icon">{Icons.Search}</span>
             ) : (
                 <span className="SmartQuery-filter-label">{props.type}</span>
             )}
-            {props.query ? (
-                <span className="SmartQuery-filter-value" data-type="query">
-                    {props.query}
+            {props.prefix ? (
+                <span className="SmartQuery-filter-value" data-type="prefix">
+                    {props.prefix}
                 </span>
             ) : props.match ? (
                 <span className="SmartQuery-filter-value" data-type="match">
@@ -33,7 +39,7 @@ const QueryFilter = props => {
  * The query format is a primary path (<type>/<prefix/id>)
  */
 function parseQuery(query) {
-    const [type, prefix] = query.split("/");
+    const [type, prefix] = (query || "").split("/");
     const filters = [];
     // We make sure the parent is a collection
     const parent = prefix ? "/" + plural(type) : "/";
@@ -44,7 +50,7 @@ function parseQuery(query) {
             merge(
                 { parent: parent },
                 type.endsWith("s")
-                    ? { type: type, query: prefix }
+                    ? { type: type, prefix: prefix }
                     : { type: type, match: prefix }
             )
         );
@@ -76,15 +82,18 @@ function refineSearchFor(type) {
 }
 
 export default props => {
-    const queryString = props.match.params.query;
-    const params = new URLSearchParams(props.location.search);
+    const queryString = props.match ? props.match.params.query : "";
+    const params = new URLSearchParams(
+        props.location ? props.location.search : window.location.search
+    );
     const query = params.get("q") || "";
     const filters = parseQuery(queryString);
     const [redirect, redirectTo] = useState(null);
     const [deferredInput] = useState(defer(100));
-    const searchFor = filters[0]
-        ? refineSearchFor(filters[0].type)
-        : "the catalogue";
+    const searchFor =
+        filters.length && filters[0]
+            ? refineSearchFor(filters[0].type)
+            : "the catalogue";
     // That's how we support rediraction on input change
     useEffect(_ => redirectTo(null), [redirect]);
 
@@ -96,23 +105,47 @@ export default props => {
         }
     };
 
+    const isEmpty = RE_EMPTY.test(query);
+    // We don't show the input if we have an exact match, for now.
+    const hasInput = !(filters.length && filters[0].match);
+
     return (
-        <div className="SmartQuery">
+        <div
+            className="SmartQuery"
+            data-state={filters.length ? "filters" : "no-filters"}
+        >
             <div className="SmartQuery-filters">
                 {filters.map((v, i) => (
-                    <div className="SmartQuery-filter__wrapper" key={i}>
-                        <QueryFilter {...v} />
-                    </div>
+                    <QueryFilter {...v} key={i} />
                 ))}
             </div>
-            <input
+            <div
                 className="SmartQuery-input"
-                type="search"
-                value={query}
-                placeholder={`Search ${searchFor}…`}
-                onChange={_ => onInputQuery(_.target.value)}
-            />
-            {redirect ? <Redirect to={redirect} /> : null}
+                data-state={
+                    (isEmpty ? "empty" : "not-empty") +
+                    (hasInput ? " input" : " no-input")
+                }
+            >
+                {isEmpty ? undefined : Icons.Search}
+                <input
+                    className="SmartQuery-input-field"
+                    type="search"
+                    value={query}
+                    placeholder={`Search ${searchFor}…`}
+                    onChange={_ => onInputQuery(_.target.value)}
+                />
+                {isEmpty ? (
+                    undefined
+                ) : (
+                    <button
+                        className="SmartQuery-input-action"
+                        onClick={_ => onInputQuery("")}
+                    >
+                        {Icons.Remove}
+                    </button>
+                )}
+                {redirect ? <Redirect to={redirect} /> : null}
+            </div>
         </div>
     );
 };

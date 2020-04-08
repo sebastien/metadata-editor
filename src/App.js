@@ -3,6 +3,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 import Page from './components/Page'
 import DatasetListPage from './pages/DatasetListPage'
 import DatasetPage from './pages/DatasetPage'
+import HomePage from './pages/HomePage'
 import './styles.css'
 import 'typeface-inter'
 
@@ -13,7 +14,7 @@ export default function () {
         <Page>
           <Switch>
             <Route exact path='/'>
-                            Hello
+              <HomePage />
             </Route>
             <Route
               path={['/datasets/:prefix', '/datasets']}

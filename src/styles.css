@@ -6,6 +6,13 @@ a:focus {
     outline: 0px solid transparent;
 }
 
+:focus {
+    outline: none;
+}
+::-moz-focus-inner {
+    border: 0;
+}
+
 :root {
     --font-family: "Inter", sans-serif;
     --color-white: #ffffff;
@@ -14,7 +21,7 @@ a:focus {
     --color-transparent: rgba(255, 255, 255, 0);
     --color-grey-lt: #f0f0f0;
     --color-grey-ltr: #fafafa;
-    --color-text-body: #172b4d;
+    --color-text: #172b4d;
     --color-grey: #afb6c2;
     --color-grey-dk: #6b778c;
     --color-blue: #0052cc;
@@ -46,6 +53,8 @@ a:focus {
     color: var(--color-white);
     display: flex;
     align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .DatCat-header-logo {
@@ -53,6 +62,8 @@ a:focus {
     padding: 16px;
     font-size: 22px;
     font-weight: bold;
+    width: 200px;
+    box-sizing: border-box;
     color: var(--color-white);
     text-decoration: none;
 }
@@ -66,6 +77,10 @@ a:focus {
     flex-grow: 100;
     display: flex;
     justify-content: center;
+}
+
+.DatCat-header-query .SmartQuery {
+    flex-grow: 100;
 }
 
 .DatCat-body {
@@ -93,6 +108,9 @@ a:focus {
     bottom: 0px;
     right: 0px;
     left: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 /* ----------------------------------------------------------------------------
@@ -105,45 +123,92 @@ a:focus {
     display: flex;
     align-items: stretch;
     font-family: var(--font-family);
-    border: 2px solid var(--color-white-faded);
-    border-radius: 4px;
-    background-color: transparent;
-    width: 400px;
+    border: 0px solid var(--color-white-faded);
+    border-radius: 24px;
+    padding: 6px;
 }
 
-.SmartQuery:focus {
-    border-color: var(--color-white);
-    background-color: var(--color-white-faded);
-}
 .SmartQuery-input {
+    display: flex;
+    align-items: center;
+    flex-grow: 100;
+    padding-left: 18px;
+    padding-right: 6px;
+    border-radius: 16px;
+}
+
+.SmartQuery-input-field {
+    flex-grow: 100;
     background: none;
+    background: transparent;
     color: var(--color-white);
-    font-size: 14px;
-    font-weight: bold;
-    padding: 8px;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 2px;
+    border: 0px solid var(--color-white);
+}
+
+.SmartQuery-input-action {
     border: 0px solid transparent;
+    outline: 0px solid transparent;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    color: var(--color-blue);
+    opacity: 0.25;
+    cursor: pointer;
+}
+.SmartQuery-input-action:hover {
+    opacity: 1;
+}
+
+.SmartQuery-input:focus {
+    background: var(--color-white-faded);
+}
+
+.SmartQuery-input .Icon {
+    position: relative;
+    left: -2px;
+    bottom: -1px;
+}
+
+.SmartQuery-input[data-state~="not-empty"] {
+    background-color: var(--color-white);
+    color: var(--color-blue);
+    padding-left: 12px;
+}
+
+.SmartQuery-input[data-state~="not-empty"] .SmartQuery-input-field {
+    color: var(--color-blue);
+    font-weight: bold;
+}
+
+.SmartQuery-input[data-state~="no-input"] .SmartQuery-input-field {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .SmartQuery-filters {
     display: flex;
-    border-radius: 2px;
-    padding: 6px;
-    background-color: var(--color-white-faded);
+    align-items: center;
+    margin-right: 8px;
 }
 
 .SmartQuery-filter {
     display: inline-flex;
     white-space: nowrap;
     align-items: center;
-    background-color: var(--color-blue);
+    background-color: var(--color-white);
+    border: 0px solid var(--color-white-faded);
+    color: var(--color-blue);
     text-decoration: none;
-    font-size: 11px;
-    padding-left: 4px;
-    padding-right: 4px;
-    color: var(--color-white);
+    font-size: 14px;
+    padding: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
     border-radius: 1.5em;
     margin-right: 8px;
-    border: 1px solid transparent;
+    max-width: 160px;
     cursor: pointer;
 }
 
@@ -160,7 +225,14 @@ a:focus {
     font-weight: bold;
     padding-left: 4px;
 }
-.SmartQuery-filter-value[data-type="query"]:before {
+
+.SmartQuery-filter-value {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.SmartQuery-filter-value[data-type="prefix"]:before {
     content: "/";
 }
 
@@ -174,24 +246,31 @@ a:focus {
     background-color: transparent;
     padding: 0px;
     padding-left: 4px;
-    color: var(--color-white-faded);
+    color: var(--color-blue);
     outline: 0px solid transparent;
     cursor: pointer !important;
-}
-
-.SmartQuery-filter:hover {
-    background-color: var(--color-white);
-    color: var(--color-blue);
-}
-
-.SmartQuery-filter-label:hover {
-    /* NOTE: We cover the remove icon */
-    transform: translateX(7px);
+    opacity: 0.25;
 }
 
 .SmartQuery-filter-action:hover {
-    color: var(--color-blue);
+    opacity: 1;
 }
+
+.SmartQuery[data-state~="no-filters"] {
+    border: 2px solid var(--color-white);
+    background-color: var(--color-white);
+    margin-right: 16px;
+}
+
+.SmartQuery[data-state~="no-filters"] .SmartQuery-input-field {
+    color: var(--color-text);
+}
+
+/* ----------------------------------------------------------------------------
+ *
+ *  SIDE BAR
+ *
+ ----------------------------------------------------------------------------*/
 
 .Sidebar {
     padding: 8px;
@@ -241,6 +320,7 @@ a:focus {
 .Highlighter-match {
     background: #ffef00;
     font-style: normal;
+    border-radius: 4px;
 }
 
 .ContentPage {
@@ -290,9 +370,6 @@ a:focus {
     font-weight: 400;
     line-height: 1.25em;
     opacity: 0.5;
-}
-
-.ContentPage-header-actions {
 }
 
 .ContentPage-body {
@@ -516,7 +593,7 @@ a:focus {
 }
 
 .DatasetList-items {
-    column-count: 2;
+    column-width: 360px;
     list-style-type: none;
     padding: 0px;
     margin: 0px;
@@ -524,8 +601,10 @@ a:focus {
     padding-top: 8px;
 }
 
-.DatasetList-item {
+.DatasetList-item,
+.DatasetList-item__empty {
     list-style-type: none;
+    break-inside: avoid-column;
     padding: 0px;
     margin: 0px;
     cursor: pointer;
@@ -537,6 +616,24 @@ a:focus {
 
 .DatasetList-item:hover {
     background-color: var(--color-grey-lt);
+}
+
+.DatasetList-empty {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.DatasetList-empty-content {
+    text-align: center;
+    color: var(--color-blue);
+}
+
+.DatasetList-empty-icon .Icon svg {
+    height: 128px;
+    width: 128px;
+    padding: 18px;
 }
 
 .DatasetGroup {
@@ -568,7 +665,7 @@ a:focus {
 
 .DatasetItem {
     text-decoration: none;
-    color: var(--color-text-body);
+    color: var(--color-text);
 }
 
 .DatasetItem-header {
@@ -620,7 +717,7 @@ a:focus {
 
 .TablePreview {
     font-family: Arial, Helvetica, sans-serif;
-    color: var(--color-text-body);
+    color: var(--color-text);
 }
 
 .TablePreview .data-grid-container .data-grid .cell {
@@ -760,4 +857,73 @@ a:focus {
     min-height: 100%;
     background-color: var(--color-white);
     border-top-left-radius: 4px;
+}
+/* ---------------------------------------------------------------------------
+
+   HOME PAGE
+
+   --------------------------------------------------------------------------- */
+
+.HomePage {
+    color: var(--color-white);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.HomePage-icon .Icon svg {
+    display: block;
+    width: 260px;
+    height: 260px;
+}
+.HomePage-message {
+    text-align: center;
+    width: 360px;
+    padding: 18px;
+    line-height: 1.85em;
+    background: var(--color-white-faded);
+    color: var(--color-white);
+    border-radius: 8px;
+}
+.HomePage-message h1 {
+    font-size: 28px;
+    font-weight: 600px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.HomePage-message em {
+    font-style: normal;
+    font-weight: 600;
+    background-color: var(--color-blue);
+    color: var(--color-white);
+    padding: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    display: inline-block;
+    border-radius: 16px;
+}
+
+.HomePage-message p {
+    margin: 0px;
+    line-height: 1.65em;
+}
+
+/* ---------------------------------------------------------------------------
+
+   DATASET LIST PAGE
+
+   --------------------------------------------------------------------------- */
+
+.DatasetListPage {
+    height: 100%;
+}
+.DatasetListPage .DatasetList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.DatasetListPage .DatasetList-empty {
+    flex-grow: 100;
 }
