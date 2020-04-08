@@ -14,7 +14,10 @@ export default function (props) {
         <div className='DatCat-header-query'>
           <HashRouter>
             <Switch>
-              <Route path='/:query*' component={SmartQuery} />
+              <Route path='/:query+' component={SmartQuery} />
+              <Route path='/'>
+                <div className='DatCat-header-placeholder' />
+              </Route>
             </Switch>
           </HashRouter>
         </div>

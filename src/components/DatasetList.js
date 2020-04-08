@@ -29,13 +29,15 @@ export default props => {
                     </div>
                 </div>
             ) : (
-                <ul className="DatasetList-items">
-                    {filteredItems.map((v, i) => (
-                        <li className="DatasetList-item" key={i}>
-                            <DatasetItem highlight={highlight} {...v} />
-                        </li>
-                    ))}
-                </ul>
+                <div className="DatasetList-content">
+                    <ul className="DatasetList-items">
+                        {filteredItems.map((v, i) => (
+                            <li className="DatasetList-item" key={i}>
+                                <DatasetItem highlight={highlight} {...v} />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </div>
     );

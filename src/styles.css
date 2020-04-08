@@ -923,7 +923,29 @@ a:focus {
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+}
+
+.DatasetListPage .DatasetList-content {
+    overflow-y: auto;
 }
 .DatasetListPage .DatasetList-empty {
+    flex-grow: 100;
+}
+
+/* ---------------------------------------------------------------------------
+
+   CONTENT PAGE
+
+   --------------------------------------------------------------------------- */
+
+.ContentPage {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ContentPage-body {
+    overflow-y: auto;
     flex-grow: 100;
 }

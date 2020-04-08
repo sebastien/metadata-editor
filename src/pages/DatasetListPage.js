@@ -86,8 +86,6 @@ export default props => {
         [query]
     );
 
-    console.log("FILTER", filter);
-
     // @render main
     return (
         <div className="DatasetListPage">
