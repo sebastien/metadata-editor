@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import DatasetItem from "./DatasetItem";
 import Icons from "./Icons";
+import { sorted } from "../utils/functional";
 
 export default props => {
     const filter = props.filter;
     const items = props.items;
-    const filteredItems = filter ? items.filter(filter) : items;
+    const sortCriteria = props.sort || (_ => _.id);
+    const sortedItems = sorted(items, sortCriteria);
+    const filteredItems = filter ? sortedItems.filter(filter) : sortedItems;
     const highlight = props.highlight;
     const isEmpty = items.length && filteredItems.length == 0;
 

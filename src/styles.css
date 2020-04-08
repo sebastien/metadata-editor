@@ -34,6 +34,18 @@ a:focus {
     margin: 0px;
 }
 
+.path-item {
+    text-decoration: none;
+    color: inherit;
+}
+.path-item:after {
+    content: ".";
+}
+
+.path-item:last-child:after {
+    content: "";
+}
+
 /* ----------------------------------------------------------------------------
  *
  * DAT CAT APP
@@ -604,7 +616,7 @@ a:focus {
 .DatasetList-item,
 .DatasetList-item__empty {
     list-style-type: none;
-    break-inside: avoid-column;
+    break-inside: avoid;
     padding: 0px;
     margin: 0px;
     cursor: pointer;

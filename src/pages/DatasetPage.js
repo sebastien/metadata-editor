@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Button, { ButtonGroup } from "@atlaskit/button";
 import Icons from "../components/Icons";
 import Editor from "../components/Editor";
-
 import { api } from "../api";
 
 export default props => {
@@ -130,7 +130,30 @@ export default props => {
                     {Icons.Dataset}
                 </div>
                 <div className="ContentPage-header-heading">
-                    <h1 className="ContentPage-header-title">{datasetId}</h1>
+                    <h1 className="ContentPage-header-title">
+                        <span className="path">
+                            {
+                                datasetId.split(".").reduce(
+                                    (r, v, i) => {
+                                        r.path.push(v);
+                                        r.items.push(
+                                            <Link
+                                                className="path-item"
+                                                key={i}
+                                                to={api.linkToDatasets(
+                                                    r.path.join(".")
+                                                )}
+                                            >
+                                                {v}
+                                            </Link>
+                                        );
+                                        return r;
+                                    },
+                                    { path: [], items: [] }
+                                ).items
+                            }
+                        </span>
+                    </h1>
                     <h2 className="ContentPage-header-subtitle">
                         4 columns, 2000 rows
                     </h2>

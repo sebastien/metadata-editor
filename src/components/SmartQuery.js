@@ -42,7 +42,12 @@ function parseQuery(query) {
     const [type, prefix] = (query || "").split("/");
     const filters = [];
     // We make sure the parent is a collection
-    const parent = prefix ? "/" + plural(type) : "/";
+    const parent_prefix = prefix
+        ? slice(prefix.split("."), 0, -1).join(".")
+        : undefined;
+    const parent = prefix
+        ? "/" + plural(type) + (parent_prefix ? "/" + parent_prefix : "")
+        : "/";
     if (type) {
         filters.push(
             // If it's a plural form, we consider it a query, otherwise
